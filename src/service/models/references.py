@@ -27,8 +27,8 @@ class RequirementActTypeData(BaseModel):
     Тело запроса для методов POST/PUT
     """
 
-    title: Optional[str] = Field(..., max_length=255)
-    regex: Optional[str] = Field(..., max_length=255)
+    title: Optional[str] = Field(..., max_length=255, description='Наименование статуса')
+    regex: Optional[str] = Field(..., max_length=255, description='Паттерн регулярного выражения')
 
 
 RequirementActTypeView = pydantic_model_creator(RequirementActType)
@@ -36,8 +36,17 @@ RequirementActTypesView = pydantic_queryset_creator(RequirementActType)
 
 # Типы субъектов
 
-RequirementSubjectView = pydantic_model_creator(RequirementSubject)
-RequirementSubjectsView = pydantic_queryset_creator(RequirementSubject)
+class RequirementSubjectTypeData(BaseModel):
+    """
+
+    Тело запроса для методов POST/PUT
+    """
+
+    title: Optional[str] = Field(..., max_length=255, description='Наименование статуса')
+    regex: Optional[str] = Field(..., max_length=255, description='Паттерн регулярного выражения')
+
+RequirementSubjectTypeView = pydantic_model_creator(RequirementSubject)
+RequirementSubjectTypesView = pydantic_queryset_creator(RequirementSubject)
 
 # Статус публикации ОТ
 
@@ -48,8 +57,8 @@ class RequirementPublicationStatusData(BaseModel):
     Тело запроса для методов POST/PUT
     """
 
-    title: Optional[str] = Field(..., max_length=255)
-    regex: Optional[str] = Field(..., max_length=255)
+    title: Optional[str] = Field(..., max_length=255, description='Наименование статуса')
+    regex: Optional[str] = Field(..., max_length=255, description='Паттерн регулярного выражения')
 
 
 RequirementPublicationStatusView = pydantic_model_creator(RequirementPublicationStatus)
@@ -59,10 +68,29 @@ RequirementPublicationStatusesView = pydantic_queryset_creator(
 
 # Статус работы с ОТ
 
+class RequirementWorkStatusData(BaseModel):
+    """
+
+    Тело запроса для методов POST/PUT
+    """
+
+    title: Optional[str] = Field(..., max_length=255, description='Наименование статуса')
+    regex: Optional[str] = Field(..., max_length=255, description='Паттерн регулярного выражения')
+
 RequirementWorkStatusView = pydantic_model_creator(RequirementWorkStatus)
 RequirementWorkStatusViews = pydantic_queryset_creator(RequirementWorkStatus)
 
 # Статус состояния ОТ
 
+class RequirementValidityStatusData(BaseModel):
+    """
+
+    Тело запроса для методов POST/PUT
+    """
+
+    title: Optional[str] = Field(..., max_length=255, description='Наименование статуса')
+    regex: Optional[str] = Field(..., max_length=255, description='Паттерн регулярного выражения')
+
 RequirementValidityStatusView = pydantic_model_creator(RequirementValidityStatus)
 RequirementValidityStatusesView = pydantic_queryset_creator(RequirementValidityStatus)
+
