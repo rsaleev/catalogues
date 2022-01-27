@@ -20,7 +20,15 @@ from src.service.models.catalogues import Catalogues, ORMModelDescription, Catal
 router = APIRouter(prefix="/catalogues")
 
 
-def fetch_catalogues():
+def fetch_catalogues()->List[CatalogueName]:
+    """
+    fetch_catalogues 
+
+    Загрузка каталогов в единый массив с преобразованием в объекты Pydantic
+
+    Returns:
+        List[CatalogueName]: массив каталогов
+    """
     all_models = []
     references_models: List[ORMModel] = references.__models__
     ervk_models: List[ORMModel] = ervk.__models__
@@ -42,7 +50,7 @@ def fetch_catalogues():
 @router.get(
     "/",
     response_model=Catalogues,
-    description="Получить список справочников",
+    description="Получение списка справочников",
     status_code=status.HTTP_200_OK,
 )
 async def get_all_catalogues():
@@ -53,7 +61,7 @@ async def get_all_catalogues():
 @router.get(
     "/title/{title}",
     response_model=CatalogueName,
-    description="Получить справочник по наименованию",
+    description="Получение справочника по наименованию",
     status_code=status.HTTP_200_OK,
 )
 async def get_catalogue_by_name(title):
