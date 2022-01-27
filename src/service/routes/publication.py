@@ -1,9 +1,9 @@
-from typing import Union
+from typing import Union, Type
 from uuid import UUID
 
 from fastapi.routing import APIRouter
 from fastapi.exceptions import HTTPException
-from fastapi import status, Response
+from fastapi import status, Response, BackgroundTasks
 
 from tortoise.exceptions import FieldError, IntegrityError
 
@@ -15,6 +15,8 @@ from src.service.models.references import (
     RequirementPublicationStatusesView,
     RequirementPublicationStatusData,
 )
+from src.database.helpers import recalc_pk
+
 
 router = APIRouter(prefix="/references/requirement/publication")
 
@@ -124,72 +126,59 @@ async def update_status_by_guid(guid: UUID, data: RequirementPublicationStatusDa
         )
     try:
         await record.update_from_dict(data.dict(exclude_unset=True))
-        return status.HTTP_202_ACCEPTED
+        return 
     except IntegrityError:
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
             detail="Ошибка обновления записи",
         )
-       
-
-
+    
 @router.delete(
     "/statuses/guid/{guid}",
     status_code=status.HTTP_202_ACCEPTED,
     description="Удаление записи статуса публикации по GUID",
 )
-async def delete_status_by_guid(guid: UUID):
-    try:
-        record = await RequirementPublicationStatus.get_or_none(uid=guid)
-        if record:
-            try:
-                await record.delete()
-                return status.HTTP_200_OK
-            except:
-                raise HTTPException(
-                    status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-                    detail="Ошибка удаления записи",
-                )
-
-        else:
-            raise HTTPException(
+async def delete_status_by_guid(guid: UUID,background_tasks: BackgroundTasks):
+    record = await RequirementPublicationStatus.get_or_none(uid=guid)
+    if not record:
+        raise HTTPException(
                 status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-                detail="Запись уже существует",
+                detail="Ошибка удаления записи",
             )
-    except (FieldError, IntegrityError):
+    try:
+        await record.delete()
+    except:
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail="Ошибка создания записи",
+            detail="Запись не существует",
         )
-
+    else:
+        background_tasks.add_task(recalc_pk, RequirementPublicationStatus)
+        return status.HTTP_200_OK
+        
 
 @router.delete(
     "/statuses/id/{id}",
     status_code=status.HTTP_202_ACCEPTED,
-    description="Удаление записи статуса публикации по GUID",
+    description="Удаление записи статуса публикации по ID",
 )
-async def delete_status_by_id(id: int):
-    try:
-        record = await RequirementPublicationStatus.get_or_none(id=id)
-        if record:
-            try:
-                await record.delete()
-                return
-            except:
-                raise HTTPException(
-                    status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-                    detail="Ошибка удаления записи",
-                )
-        else:
-            raise HTTPException(
+async def delete_status_by_id(id: int, background_tasks: BackgroundTasks):
+    record = await RequirementPublicationStatus.get_or_none(id=id)
+    if not record:
+        raise HTTPException(
                 status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-                detail="Запись уже существует",
+                detail="Ошибка удаления записи",
             )
-    except (FieldError, IntegrityError):
+    try:
+        await record.delete()
+    except:
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail="Ошибка создания записи",
+            detail="Запись не существует",
         )
+    else:
+        background_tasks.add_task(recalc_pk, RequirementPublicationStatus)
+        return status.HTTP_200_OK
 
 
 @router.post(
