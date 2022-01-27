@@ -4,7 +4,7 @@ from uuid import UUID
 
 from fastapi.routing import APIRouter
 from fastapi.exceptions import HTTPException
-from fastapi import status
+from fastapi import status, BackgroundTasks
 
 from tortoise.exceptions import IntegrityError, FieldError
 
@@ -16,6 +16,7 @@ from src.service.models.references import (
     RequirementActTypesView,
     RequirementActTypeData,
 )
+from src.database.helpers import recalc_pk
 
 router = APIRouter(prefix="/references/requirement/act")
 
@@ -133,3 +134,52 @@ async def create_act(data:RequirementActTypeData):
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST, detail="Запись уже существует"
         )
+
+@router.delete(
+    "/statuses/guid/{guid}",
+    status_code=status.HTTP_202_ACCEPTED,
+    description="Удаление записи статуса публикации по GUID",
+)
+async def delete_type_by_guid(guid: UUID, background_tasks: BackgroundTasks):
+    record = await RequirementActType.get_or_none(uid=guid)
+    if not record:
+        raise HTTPException(
+                status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+                detail="Ошибка удаления записи",
+            )
+    try:
+        await record.delete()
+    except:
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="Запись не существует",
+        )
+    else:
+        background_tasks.add_task(recalc_pk, RequirementActType)
+        return status.HTTP_200_OK
+        
+
+@router.delete(
+    "/statuses/id/{id}",
+    status_code=status.HTTP_202_ACCEPTED,
+    description="Удаление записи статуса публикации по GUID",
+)
+async def delete_status_by_id(id: int, background_tasks: BackgroundTasks):
+    record = await RequirementActType.get_or_none(id=id)
+    if not record:
+        raise HTTPException(
+                status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+                detail="Ошибка удаления записи",
+            )
+    try:
+        await record.delete()
+    except:
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="Запись не существует",
+        )
+    else:
+        background_tasks.add_task(recalc_pk, RequirementActType)
+        return status.HTTP_200_OK
+
+  
