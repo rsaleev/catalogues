@@ -1,0 +1,51 @@
+{
+    "connections": {
+        "ervk": {
+            "engine":"tortoise.backends.asyncpg",
+            "credentials": {
+                "user": "postgres",
+                "password": "1234567",
+                "host":"172.19.8.210",
+                "port":5432,
+                "database": "ervk",
+                "schema":"public"
+            }
+        },
+        "references": {
+            "engine":"tortoise.backends.asyncpg",
+            "credentials":{
+                "user":"postgres",
+                "password": "1234567",
+                "host":"172.19.8.210",
+                "port":5432,
+                "database": "references",
+                "schema":"public"
+            }
+        },
+        "okved": {
+            "engine":"tortoise.backends.asyncpg",
+            "credentials":{
+                "user":"postgres",
+                "password":"1234567",
+                "host":"172.19.8.210",
+                "port":5432,
+                "database":"okved",
+                "schema":"public"
+            }
+        }
+    },
+    "apps": {
+        "references":{
+            "models": ["src.database.models.catalogues.references"],
+            "default_connection":"references"
+        },
+        "okved":{
+            "models": ["src.database.models.catalogues.okved"],
+            "default_connection":"okved"
+        },
+        "ervk":{
+            "models": ["src.database.models.catalogues.ervk"],
+            "default_connection":"ervk"
+        }
+    }
+}

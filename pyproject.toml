@@ -3,12 +3,21 @@ name = "catalogues"
 version = "0.1.0"
 description = ""
 authors = ["rsaleev <rs.aleev@gmail.com>"]
+packages = [
+    {include = "./src"}
+]
 
 [tool.poetry.dependencies]
 python = "^3.9"
+uvloop = "^0.16.0"
+fastapi = "^0.73.0"
+fastapi-health = "^0.4.0"
+dbridge = { path = "./src/database", develop=true }
+tortoise-orm = "^0.18.1"
 
 [tool.poetry.dev-dependencies]
 pytest = "^5.2"
+uvicorn = "^0.17.0"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]
