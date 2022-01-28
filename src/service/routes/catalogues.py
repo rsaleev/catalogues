@@ -1,6 +1,8 @@
-from typing import List
+from typing import List, Type
 
 from itertools import groupby
+
+from enum import Enum
 
 from fastapi.routing import APIRouter
 from fastapi.exceptions import HTTPException
@@ -9,13 +11,22 @@ from fastapi import status
 from tortoise.models import Model as ORMModel
 
 from src.database.models import references
-from src.database.models import ervk
+from src.database.models import codex
 from src.database.models import okved
+from src.database.models import ervk
 
 from src.service.schemas.catalogues import CatalogueName, Catalogues, ORMModelDescription
-
+from .references.acts import ROUTE
 
 router = APIRouter(prefix="/catalogues", tags=['Список справочников в системе'])
+
+
+class CatalogueTitle(Enum):
+    references = "Справочник атрибутов ОТ"
+    codex = "Справочник кодексов РФ"
+    okved = "Справочник ОКВЭД"
+    ervk = "Справочник ЕРВК"
+
 
 
 def fetch_catalogues()->List[CatalogueName]:
@@ -29,19 +40,20 @@ def fetch_catalogues()->List[CatalogueName]:
     """
     all_models = []
     references_models: List[ORMModel] = references.__models__
-    ervk_models: List[ORMModel] = ervk.__models__
+    codex_models: List[ORMModel] = codex.__models__
     okved_models: List[ORMModel] = okved.__models__
-    organizations: List[ORMModel] = []
+    ervk_models: List[ORMModel] = ervk.__models__
     all_models.extend(references_models)
-    all_models.extend(ervk_models)
+    all_models.extend(codex_models)
     all_models.extend(okved_models)
-    all_models.extend(organizations)
+    all_models.extend(ervk_models)
     all_models = [ORMModelDescription(**m.describe()) for m in all_models]
     catalogues_list = [ct for ct in all_models if not ct.abstract]
-    catalogues_grouped = [
+    catalogues_grouped:List[CatalogueName] = [
         CatalogueName(**{"title": k, "data": [desc.dict() for desc in g]})
         for k, g in groupby(catalogues_list, key=lambda o: o.app)
     ]
+    [ct.map_values(CatalogueTitle) for ct in catalogues_grouped]
     return catalogues_grouped
 
 

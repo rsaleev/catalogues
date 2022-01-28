@@ -7,6 +7,8 @@ from tortoise.fields.relational import OneToOneField, ReverseRelation, ForeignKe
 
 from custom_fields import TextArrayField
 
+
+__title__ = "Кодексы РФ"
 class Codex(Model):
 
     id = IntField(pk=True)
@@ -21,6 +23,7 @@ class Codex(Model):
         app ='codex'
         table_name ='codexes'
         ordering=["id"]
+        table_description = "Список кодексов РФ"
 
 
 class Article(Model):
@@ -42,6 +45,7 @@ class Article(Model):
         app ='codex'
         table_name ='articles'
         ordering=["id"]
+        table_description = "Статьи кодексов РФ"
 
 
     class PydanticMeta:
@@ -64,6 +68,8 @@ class Paragraph(Model):
         app ='codex'
         table_name ='articles'
         ordering=["id"]
+        table_description = "Параграфы статей кодексов РФ"
+
 
     class PydanticMeta:
         exclude=("id","article_id")
@@ -87,9 +93,10 @@ class Sanction(Model):
         app ='codex'
         table_name ='sanctions'
         ordering=["id"]
-
+        table_description = "Наказания и размеры наказаний по статьям кодексов"
 
     class PydanticMeta:
         exclude=("id","article_id", "guid")
 
 __models__ = [Codex, Article, Paragraph, Sanction]
+

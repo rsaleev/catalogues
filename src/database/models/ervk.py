@@ -3,6 +3,8 @@ from tortoise.models import Model
 from tortoise.fields.data import IntField,UUIDField, CharField
 from tortoise.fields.relational import ForeignKeyField, ReverseRelation
 
+
+__title__ = "Единый реестр видов контроля"
 class ControlLevel(Model):
     id = IntField(pk=True)
     uid = UUIDField(index=True, unique=True)
@@ -15,6 +17,7 @@ class ControlLevel(Model):
     class Meta:
         app = 'ervk'
         table = 'ctrl_levels'
+        table_description = "Список уровней контроля"
 
 class ControlTypes(Model):
     id = IntField(pk=True)
@@ -27,6 +30,8 @@ class ControlTypes(Model):
     class Meta:
         app = 'ervk'
         table = 'ctrl_types'
+        table_description = 'Список типов контроля'
+
 
 class ControlOrganizations(Model):
     id = IntField(pk=True)
@@ -41,6 +46,7 @@ class ControlOrganizations(Model):
     class Meta:
         app = 'ervk'
         table = 'ctrl_orgs'
+        table_description = 'Список контролирующих органов'
 
 class ControlActions(Model):
     id = IntField(pk=True)
@@ -51,6 +57,8 @@ class ControlActions(Model):
     class Meta:
         app = 'ervk'
         table = 'ctrl_actions'
+        table_description = 'Список контрольных действий'
+
 
 class RiskCategories(Model):
     id = IntField(pk=True)
@@ -62,6 +70,7 @@ class RiskCategories(Model):
     class Meta:
         app = 'ervk'
         table = 'ctrl_risks'
+        table_description = 'Категории рисков'
 
 class ControlSubjects(Model):
     id = IntField(pk=True)
@@ -72,5 +81,7 @@ class ControlSubjects(Model):
     class Meta:
         app = 'ervk'
         table = 'ctrl_subjects'
+        table_description = 'Субъекты контроля'
+
 
 __models__= [ControlLevel, ControlTypes, ControlOrganizations, ControlActions, RiskCategories, ControlSubjects]

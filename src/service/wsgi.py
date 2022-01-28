@@ -15,11 +15,11 @@ from tortoise import Tortoise
 
 from src.service.settings import Settings
 
-from src.service.routes import publication
+from src.service.routes.references import publication
 from src.service.routes import catalogues
-from src.service.routes import acts
-from src.service.routes import subjects
-from src.service.routes import work
+from src.service.routes.references import acts
+from src.service.routes.references import subjects
+from src.service.routes.references import work
 
 settings = Settings()
 

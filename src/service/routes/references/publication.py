@@ -18,11 +18,11 @@ from src.service.schemas.references import (
 from src.database.helpers import recalc_pk
 
 
-router = APIRouter(prefix="/references/requirement/publication", tags=['Статус публикации ОТ'])
+router = APIRouter(prefix="/references", tags=['Статус публикации ОТ'])
 
 
 @router.get(
-    "/statuses",
+    "/publications",
     response_model=RequirementPublicationStatusesView,
     description="Список статусов публикации ОТ",
     status_code=status.HTTP_200_OK,
@@ -35,7 +35,7 @@ async def get_statuses():
 
 
 @router.get(
-    "/statuses/id/{id}",
+    "/publications/id/{id}",
     response_model=RequirementPublicationStatusView,
     description="Статус публикации ОТ по ID записи",
     status_code=status.HTTP_200_OK,
@@ -53,7 +53,7 @@ async def get_status_by_id(id: int):
 
 
 @router.get(
-    "/statuses/guid/{guid}",
+    "/publications/guid/{guid}",
     response_model=RequirementPublicationStatusView,
     description="Статус публикации ОТ по GUID записи",
 )
@@ -70,7 +70,7 @@ async def get_status_by_guid(guid: UUID):
 
 
 @router.get(
-    "/statuses/title/{title}",
+    "/publications/title/{title}",
     response_model=RequirementPublicationStatusView,
     description="Поиск статуса публикации ОТ по описанию",
 )
@@ -92,7 +92,7 @@ async def get_status_by_title(title: str):
 
 
 @router.put(
-    "/statuses/id/{id}",
+    "/publications/id/{id}",
     status_code=status.HTTP_202_ACCEPTED,
     description="Обновление записи статуса публикации по ID",
 )
@@ -114,7 +114,7 @@ async def update_status_by_id(id: int, data: RequirementPublicationStatusData):
 
 
 @router.put(
-    "/statuses/guid/{guid}",
+    "/publications/guid/{guid}",
     status_code=status.HTTP_202_ACCEPTED,
     description="Обновление записи статуса публикации по GUID",
 )
@@ -134,7 +134,7 @@ async def update_status_by_guid(guid: UUID, data: RequirementPublicationStatusDa
         )
     
 @router.delete(
-    "/statuses/guid/{guid}",
+    "/publications/guid/{guid}",
     status_code=status.HTTP_202_ACCEPTED,
     description="Удаление записи статуса публикации по GUID",
 )
@@ -158,7 +158,7 @@ async def delete_status_by_guid(guid: UUID,background_tasks: BackgroundTasks):
         
 
 @router.delete(
-    "/statuses/id/{id}",
+    "/publications/id/{id}",
     status_code=status.HTTP_202_ACCEPTED,
     description="Удаление записи статуса публикации по ID",
 )
@@ -182,7 +182,7 @@ async def delete_status_by_id(id: int, background_tasks: BackgroundTasks):
 
 
 @router.post(
-    "/statuses",
+    "/publications",
     status_code=status.HTTP_201_CREATED,
     description="Создание нового статуса публикации ОТ",
 )

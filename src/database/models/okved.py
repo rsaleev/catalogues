@@ -4,6 +4,7 @@ from tortoise.fields.data import CharField
 from tortoise.fields.relational import ReverseRelation, ForeignKeyField
 from tortoise.models import Model
 
+__title__ = "Справочник ОКВЭД"
 
 class OkvedBase(Model):
     id = IntField(pk=True, description='Первичный ключ')

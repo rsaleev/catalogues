@@ -4,6 +4,8 @@ from tortoise.models import Model
 from tortoise.fields import IntField, CharField, UUIDField
 
 
+__title__ = "Справочная информация по атрибутам ОТ"
+
 class ReferenceBaseModel(Model):
     id = IntField(pk=True, description="Первичный ключ")
     uid = UUIDField(default=uuid4, description="Уникальный идентификатор")
@@ -44,7 +46,7 @@ class RequirementPublicationStatus(ReferenceBaseModel):
     class Meta:
         app = "references"
         table = "ref_publication_status"
-        table_description = "Статусы субъектов"
+        table_description = "Статусы публикации"
         ordering = ["id"]
 
     class PydanticMeta:
@@ -57,6 +59,8 @@ class RequirementWorkStatus(ReferenceBaseModel):
         app = "references"
         table = "ref_work_status"
         ordering = ["id"]
+        table_description = "Статусы работы с ОТ"
+
 
     class PydanticMeta:
         exclude = []
@@ -68,6 +72,8 @@ class RequirementValidityStatus(ReferenceBaseModel):
         app = "references"
         table = "ref_validity_status"
         ordering = ["id"]
+        table_description = "Статусы действия ОТ"
+
 
     class PydanticMeta:
         exclude = []
@@ -79,10 +85,13 @@ class RequirementOrganizationType(ReferenceBaseModel):
         app = "references"
         table = "ref_organization_type"
         ordering = ["id"]
+        table_description = "Органы, проверяющие на соответствие ОТ; органы, выдающие информацию и т.д."
+
 
     class PydanticMeta:
         exclude = []
         inclde = []
+
 
 
 __models__ = [

@@ -1,6 +1,7 @@
-from typing import Optional, List, Dict, Any
+from pydoc import describe
+from typing import Optional, List,Type
 
-
+from enum import Enum
 
 from pydantic import BaseModel
 
@@ -39,9 +40,7 @@ class ORMModelDescription(BaseModel):
 
 
 class CatalogueTable(BaseModel):
-    table:str
     description:Optional[str] = ''
-
 
     class Meta:
         exclude =['abstact']
@@ -49,6 +48,12 @@ class CatalogueTable(BaseModel):
 class CatalogueName(BaseModel):
     title:str 
     data:List[CatalogueTable]
+    link:str = ''
+    description:str =''
+
+    def map_values(self, map:Type[Enum]):
+        self.link = f'/{self.title}'
+        self.description = map[self.title].value
 
 
 class Catalogues(BaseModel):
