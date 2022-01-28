@@ -142,6 +142,5 @@ poetry.*
 *.toml
 config.json
 config/
-src/config/
-src/config/
+src/config/*
 
