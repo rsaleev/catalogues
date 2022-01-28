@@ -10,7 +10,7 @@ from tortoise.exceptions import IntegrityError, FieldError
 
 import re
 
-from src.service.models.references import (
+from src.service.schemas.references import (
     RequirementActType,
     RequirementActTypeView,
     RequirementActTypesView,
