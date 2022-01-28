@@ -11,32 +11,36 @@ from tortoise.exceptions import IntegrityError, FieldError
 import re
 
 from src.service.models.references import (
-    RequirementActType,
-    RequirementActTypeView,
-    RequirementActTypesView,
-    RequirementActTypeData,
+    RequirementWorkStatus,
+    RequirementWorkStatusView,
+    RequirementWorkStatusesView,
+    RequirementWorkStatusData,
 )
 from src.database.helpers import recalc_pk
 
-router = APIRouter(prefix="/references/requirement/act",tags=["Тип акта ОТ"])
+router = APIRouter(prefix="/references/requirement/work", tags=["Статус работы с ОТ"])
+
 
 @router.get(
-    "/types",
-    response_model=RequirementActTypesView,
-    description="Список типов актов ОТ",
+    "/statuses",
+    response_model=RequirementWorkStatusesView,
+    description="Список статусов работы с ОТ",
 )
-async def get_types():
-    records = await RequirementActTypesView.from_queryset(RequirementActType.all())
+async def get_statuses():
+    records = await RequirementWorkStatusesView.from_queryset(
+        RequirementWorkStatus.all()
+    )
     return records
 
+
 @router.get(
-    "/types/id/{id}",
-    response_model=RequirementActTypeView,
+    "/statuses/id/{id}",
+    response_model=RequirementWorkStatusView,
     description="Тип акта ОТ по ID записи",
 )
-async def get_act_by_id(id: int):
-    record = await RequirementActTypeView.from_queryset_single(
-        RequirementActType.get_or_none(id=id)
+async def get_status_by_id(id: int):
+    record = await RequirementWorkStatusView.from_queryset_single(
+        RequirementWorkStatus.get_or_none(id=id)
     )
     if record:
         return record
@@ -45,43 +49,48 @@ async def get_act_by_id(id: int):
 
 
 @router.get(
-    "/types/guid/{guid}",
-    response_model=RequirementActTypeView,
-    description="Статус публикации ОТ по GUID записи",
+    "/statuses/guid/{guid}",
+    response_model=RequirementWorkStatusView,
+    description="Статус работы с ОТ по GUID записи",
 )
 async def get_status_by_guid(guid: UUID):
-    record = await RequirementActTypeView.from_queryset_single(
-        RequirementActType.get_or_none(guid=guid)
+    record = await RequirementWorkStatusView.from_queryset_single(
+        RequirementWorkStatus.get_or_none(guid=guid)
     )
     if record:
         return record
     else:
         raise HTTPException(status_code=404, detail="Запись не найдена")
 
+
 @router.get(
-    "/types/title/{title}",
-    response_model=RequirementActTypeView,
-    description="Поиск статуса публикации ОТ по описанию",
-    status_code=status.HTTP_200_OK
+    "/statuses/title/{title}",
+    response_model=RequirementWorkStatusView,
+    description="Поиск статуса работы с ОТ по описанию",
+    status_code=status.HTTP_200_OK,
 )
-async def get_act_by_title(title: str):
+async def get_status_by_title(title: str):
     """
     Поиск осуществляется по регулярному выражению, записанному в таблице в атрибуте regex
     """
-    records = await RequirementActType.all()
-    result: Union[RequirementActType, None] = next(
+    records = await RequirementWorkStatus.all()
+    result: Union[RequirementWorkStatus, None] = next(
         (r for r in records if re.match(r.regex, title, flags=re.I)), None
     )
     if result:
-        record = RequirementActTypeView.from_orm(result)
+        record = RequirementWorkStatusView.from_orm(result)
         return record
     else:
         raise HTTPException(status_code=404, detail="Запись не найдена")
 
 
-@router.put("/types/id/{id}", status_code=status.HTTP_200_OK, description="Изменение записи по ID")
-async def update_act_by_id(id: int, data: RequirementActTypeData):
-    record = await RequirementActType.get_or_none(id=id)
+@router.put(
+    "/statuses/id/{id}",
+    status_code=status.HTTP_200_OK,
+    description="Изменение записи по ID",
+)
+async def update_status_by_id(id: int, data: RequirementWorkStatusData):
+    record = await RequirementWorkStatus.get_or_none(id=id)
     if not record:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND, detail="Запись не найдена"
@@ -96,57 +105,67 @@ async def update_act_by_id(id: int, data: RequirementActTypeData):
         )
 
 
-@router.put("/types/guid/{guid}", status_code=status.HTTP_200_OK, description="Изменение записи по GUID")
-async def update_act_by_guid(guid: UUID, data: RequirementActTypeData):
-    record = await RequirementActType.get_or_none(uid=guid)
+@router.put(
+    "/statuses/guid/{guid}",
+    status_code=status.HTTP_200_OK,
+    description="Изменение записи по GUID",
+)
+async def update_status_by_guid(guid: UUID, data: RequirementWorkStatusData):
+    record = await RequirementWorkStatus.get_or_none(uid=guid)
     if not record:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND, detail="Запись не найдена"
         )
     try:
         await record.update_from_dict(data.dict(exclude_unset=True))
-        return 
+        return
     except IntegrityError:
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
             detail="Ошибка обновления записи",
         )
 
-@router.post("/types", status_code=status.HTTP_201_CREATED, description="Создание типа акта")
-async def create_act(data:RequirementActTypeData):
+
+@router.post(
+    "/statuses",
+    status_code=status.HTTP_201_CREATED,
+    description="Создание типа статуса работы с ОТ",
+)
+async def create_status(data: RequirementWorkStatusData):
     if not data.title or not data.regex:
         raise HTTPException(
             status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
             detail="Тело запроса не соответствует схеме",
         )
-    record = await RequirementActType.get_or_none(title=data.title)
+    record = await RequirementWorkStatus.get_or_none(title=data.title)
     if not record:
         try:
-            await RequirementActType.create(**data.dict())
+            await RequirementWorkStatus.create(**data.dict())
         except (FieldError, IntegrityError):
             raise HTTPException(
                 status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
                 detail="Ошибка создания записи",
             )
         else:
-            return 
+            return
     else:
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST, detail="Запись уже существует"
         )
 
+
 @router.delete(
-    "/types/guid/{guid}",
+    "/statuses/guid/{guid}",
     status_code=status.HTTP_202_ACCEPTED,
-    description="Удаление записи статуса публикации по GUID",
+    description="Удаление записи статуса работы по GUID",
 )
-async def delete_type_by_guid(guid: UUID, background_tasks: BackgroundTasks):
-    record = await RequirementActType.get_or_none(uid=guid)
+async def delete_status_by_guid(guid: UUID, background_tasks: BackgroundTasks):
+    record = await RequirementWorkStatus.get_or_none(uid=guid)
     if not record:
         raise HTTPException(
-                status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-                detail="Ошибка удаления записи",
-            )
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="Ошибка удаления записи",
+        )
     try:
         await record.delete()
     except:
@@ -155,22 +174,22 @@ async def delete_type_by_guid(guid: UUID, background_tasks: BackgroundTasks):
             detail="Запись не существует",
         )
     else:
-        background_tasks.add_task(recalc_pk, RequirementActType)
+        background_tasks.add_task(recalc_pk, RequirementWorkStatus)
         return status.HTTP_200_OK
-        
+
 
 @router.delete(
-    "/types/id/{id}",
+    "/statuses/id/{id}",
     status_code=status.HTTP_202_ACCEPTED,
-    description="Удаление записи статуса публикации по GUID",
+    description="Удаление записи работы по ID",
 )
 async def delete_status_by_id(id: int, background_tasks: BackgroundTasks):
-    record = await RequirementActType.get_or_none(id=id)
+    record = await RequirementWorkStatus.get_or_none(id=id)
     if not record:
         raise HTTPException(
-                status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-                detail="Ошибка удаления записи",
-            )
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="Ошибка удаления записи",
+        )
     try:
         await record.delete()
     except:
@@ -179,7 +198,5 @@ async def delete_status_by_id(id: int, background_tasks: BackgroundTasks):
             detail="Запись не существует",
         )
     else:
-        background_tasks.add_task(recalc_pk, RequirementActType)
+        background_tasks.add_task(recalc_pk, RequirementWorkStatus)
         return status.HTTP_200_OK
-
-  

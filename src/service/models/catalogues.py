@@ -44,7 +44,7 @@ class CatalogueTable(BaseModel):
 
 
     class Meta:
-        exclude ={'abstact'}
+        exclude =['abstact']
 
 class CatalogueName(BaseModel):
     title:str 

@@ -1,20 +1,17 @@
 from typing import Optional
-from xml.dom import ValidationErr
 
 from tortoise.contrib.pydantic.creator import (
     pydantic_model_creator,
     pydantic_queryset_creator,
 )
 
-from src.database.models.catalogues.references import *
+from src.database.models.references import *
 
 from pydantic import BaseModel, Field
 
 """
 https://tortoise-orm.readthedocs.io/en/latest/contrib/pydantic.html
 https://tortoise-orm.readthedocs.io/en/latest/examples/pydantic.html#
-
-
 
 """
 
@@ -78,7 +75,7 @@ class RequirementWorkStatusData(BaseModel):
     regex: Optional[str] = Field(..., max_length=255, description='Паттерн регулярного выражения')
 
 RequirementWorkStatusView = pydantic_model_creator(RequirementWorkStatus)
-RequirementWorkStatusViews = pydantic_queryset_creator(RequirementWorkStatus)
+RequirementWorkStatusesView = pydantic_queryset_creator(RequirementWorkStatus)
 
 # Статус состояния ОТ
 

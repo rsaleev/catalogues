@@ -18,7 +18,7 @@ from src.service.models.references import (
 from src.database.helpers import recalc_pk
 
 
-router = APIRouter(prefix="/references/requirement/publication")
+router = APIRouter(prefix="/references/requirement/publication", tags=['Статус публикации ОТ'])
 
 
 @router.get(

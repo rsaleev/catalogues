@@ -1,5 +1,4 @@
-from nis import cat
-from typing import ChainMap, List
+from typing import List
 
 from itertools import groupby
 
@@ -14,10 +13,10 @@ from src.database.models.catalogues import ervk
 from src.database.models.catalogues import okved
 from src.database.models.catalogues import organizations
 
-from src.service.models.catalogues import Catalogues, ORMModelDescription, CatalogueName
+from src.service.models.catalogues import CatalogueName, Catalogues, ORMModelDescription
 
 
-router = APIRouter(prefix="/catalogues")
+router = APIRouter(prefix="/catalogues", tags=['Список справочников в системе'])
 
 
 def fetch_catalogues()->List[CatalogueName]:
@@ -54,7 +53,10 @@ def fetch_catalogues()->List[CatalogueName]:
     status_code=status.HTTP_200_OK,
 )
 async def get_all_catalogues():
-    response = Catalogues(catalogues=fetch_catalogues())
+    try:
+        response = Catalogues(catalogues=fetch_catalogues())
+    except:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Записи отсутствуют")
     return response
 
 
@@ -66,7 +68,6 @@ async def get_all_catalogues():
 )
 async def get_catalogue_by_name(title):
     response = next((cat for cat in fetch_catalogues() if cat.title == title), None)
-    if response:
-        return response
-    else:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND)
+    if not response:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Запись отсутствует")
+    return response

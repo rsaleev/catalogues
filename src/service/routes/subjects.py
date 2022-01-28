@@ -18,7 +18,7 @@ from src.service.models.references import (
 from src.database.helpers import recalc_pk
 
 
-router = APIRouter(prefix="/references/requirement/subjects")
+router = APIRouter(prefix="/references/requirement/subjects", tags=['Типы субъектов'])
 
 
 @router.get(
