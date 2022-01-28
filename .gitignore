@@ -141,6 +141,6 @@ cython_debug/
 poetry.*
 *.toml
 config.json
-config/
-src/config/*
+*/config/
+
 
