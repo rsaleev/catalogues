@@ -47,5 +47,7 @@
             "models": ["src.database.models.catalogues.ervk"],
             "default_connection":"ervk"
         }
-    }
+    },
+    "use_tz": false,
+    "timezone": "Europe/Moscow"
 }
