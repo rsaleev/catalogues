@@ -9,7 +9,7 @@ from tortoise.exceptions import FieldError, IntegrityError
 
 import re
 
-from src.service.models.references import (
+from src.service.schemas.references import (
     RequirementPublicationStatus,
     RequirementPublicationStatusView,
     RequirementPublicationStatusesView,

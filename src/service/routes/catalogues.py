@@ -8,12 +8,11 @@ from fastapi import status
 
 from tortoise.models import Model as ORMModel
 
-from src.database.models.catalogues import references
-from src.database.models.catalogues import ervk
-from src.database.models.catalogues import okved
-from src.database.models.catalogues import organizations
+from src.database.models import references
+from src.database.models import ervk
+from src.database.models import okved
 
-from src.service.models.catalogues import CatalogueName, Catalogues, ORMModelDescription
+from src.service.schemas.catalogues import CatalogueName, Catalogues, ORMModelDescription
 
 
 router = APIRouter(prefix="/catalogues", tags=['Список справочников в системе'])
