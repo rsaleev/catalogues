@@ -18,7 +18,7 @@ from src.service.schemas.references import (
 
 )
 
-router = APIRouter(prefix="/references/organizations",tags=["Виды контролирующих органов"])
+router = APIRouter(prefix="/catalogues/references/organizations",tags=["Виды контролирующих органов"])
 
 @router.get(
     "",

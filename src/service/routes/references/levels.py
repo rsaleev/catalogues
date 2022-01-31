@@ -18,7 +18,7 @@ from src.service.schemas.references import (
 
 )
 
-router = APIRouter(prefix="/references/levels",tags=["Виды контроля ОТ"])
+router = APIRouter(prefix="/catalogues/references/levels",tags=["Виды контроля ОТ"])
 
 @router.get(
     "",

@@ -5,7 +5,7 @@ from tortoise.models import Model
 from tortoise.fields import IntField, TextField, UUIDField
 from tortoise.fields.relational import OneToOneField, ReverseRelation, ForeignKeyField
 
-from custom_fields import TextArrayField
+from src.database.custom_fields import TextArrayField
 
 
 __title__ = "Кодексы РФ"
