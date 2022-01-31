@@ -1,7 +1,7 @@
 from uuid import uuid4
 
 from tortoise.models import Model
-from tortoise.fields import IntField, CharField, UUIDField
+from tortoise.fields import IntField, CharField, UUIDField, TextField
 
 
 __title__ = "Справочная информация по атрибутам ОТ"
@@ -13,6 +13,7 @@ class ReferenceBaseModel(Model):
     regex = CharField(
         max_length=255, description="Описание в виде паттерна регулярного выражения"
     )
+    code = IntField(null=False, description="Значение в виде кода (целое число)")
 
     class Meta:
         abstract=True
@@ -26,7 +27,7 @@ class RequirementActType(ReferenceBaseModel):
         ordering = ["id"]
 
     class PydanticMeta:
-        exclude = []
+        exclude = ["id"]
         include = []
 
 
@@ -38,7 +39,7 @@ class RequirementSubject(ReferenceBaseModel):
         ordering = ["id"]
 
     class PydanticMeta:
-        exclude = []
+        exclude = ["id"]
         include = []
 
 
@@ -50,7 +51,7 @@ class RequirementPublicationStatus(ReferenceBaseModel):
         ordering = ["id"]
 
     class PydanticMeta:
-        exclude = []
+        exclude = ["id"]
         include = []
 
 
@@ -63,7 +64,7 @@ class RequirementWorkStatus(ReferenceBaseModel):
 
 
     class PydanticMeta:
-        exclude = []
+        exclude = ["id"]
         inclde = []
 
 
@@ -76,22 +77,34 @@ class RequirementValidityStatus(ReferenceBaseModel):
 
 
     class PydanticMeta:
-        exclude = []
+        exclude = ["id"]
         inclde = []
 
 
-class RequirementOrganizationType(ReferenceBaseModel):
+class RequirementControlOrganization(ReferenceBaseModel):
+
+    gisok_alias = TextField()
     class Meta:
         app = "references"
-        table = "ref_organization_type"
+        table = "ref_control_org"
         ordering = ["id"]
         table_description = "Органы, проверяющие на соответствие ОТ; органы, выдающие информацию и т.д."
 
 
     class PydanticMeta:
-        exclude = []
+        exclude = ["id"]
         inclde = []
 
+class RequirementControlLevel(ReferenceBaseModel):
+
+     class Meta:
+        app = "references"
+        table = "ref_control_level"
+        ordering = ["id"]
+        table_description = "Уровень контроля ОТ"
+
+
+    
 
 
 __models__ = [
@@ -100,5 +113,6 @@ __models__ = [
     RequirementSubject,
     RequirementValidityStatus,
     RequirementWorkStatus,
-    RequirementOrganizationType,
+    RequirementControlOrganization,
+    RequirementControlLevel
 ]
