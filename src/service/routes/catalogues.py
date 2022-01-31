@@ -16,7 +16,6 @@ from src.database.models import okved
 from src.database.models import ervk
 
 from src.service.schemas.catalogues import CatalogueName, Catalogues, ORMModelDescription
-from .references.acts import ROUTE
 
 router = APIRouter(prefix="/catalogues", tags=['Список справочников в системе'])
 
@@ -58,7 +57,7 @@ def fetch_catalogues()->List[CatalogueName]:
 
 
 @router.get(
-    "/",
+    "",
     response_model=Catalogues,
     description="Получение списка справочников",
     status_code=status.HTTP_200_OK,
