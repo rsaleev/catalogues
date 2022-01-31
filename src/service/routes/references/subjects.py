@@ -1,9 +1,9 @@
-from typing import Union, Type
+from typing import Union
 from uuid import UUID
 
 from fastapi.routing import APIRouter
 from fastapi.exceptions import HTTPException
-from fastapi import status, Response, BackgroundTasks
+from fastapi import status
 
 from tortoise.exceptions import FieldError, IntegrityError
 
@@ -18,16 +18,16 @@ from src.service.schemas.references import (
 from src.database.helpers import recalc_pk
 
 
-router = APIRouter(prefix="/references/requirement/subjects", tags=['Типы субъектов'])
+router = APIRouter(prefix="/references/subjects", tags=['Типы субъектов'])
 
 
 @router.get(
-    "/types",
+    "",
     response_model=RequirementSubjectTypesView,
     description="Список типо субъектов ОТ",
     status_code=status.HTTP_200_OK,
 )
-async def get_types():
+async def get_subjects():
     records = await RequirementSubjectTypesView.from_queryset(
         RequirementSubject.all()
     )
@@ -35,12 +35,12 @@ async def get_types():
 
 
 @router.get(
-    "/types/id/{id}",
+    "/id/{id}",
     response_model=RequirementSubjectTypeView,
     description="Тип субъекта ОТ по ID записи",
     status_code=status.HTTP_200_OK,
 )
-async def get_status_by_id(id: int):
+async def get_subject_by_id(id: int):
     record = await RequirementSubjectTypeView.from_queryset_single(
         RequirementSubject.get_or_none(id=id)
     )
@@ -53,11 +53,11 @@ async def get_status_by_id(id: int):
 
 
 @router.get(
-    "/types/guid/{guid}",
+    "/guid/{guid}",
     response_model=RequirementSubjectTypeView,
     description="Тип субъекта ОТ по GUID записи",
 )
-async def get_status_by_guid(guid: UUID):
+async def get_subject_by_guid(guid: UUID):
     record = await RequirementSubjectTypeView.from_queryset_single(
         RequirementSubject.get_or_none(uid=guid)
     )
@@ -70,11 +70,11 @@ async def get_status_by_guid(guid: UUID):
 
 
 @router.get(
-    "/types/title/{title}",
+    "/title/{title}",
     response_model=RequirementSubjectTypeView,
     description="Поиск типа субъекта ОТ по описанию",
 )
-async def get_status_by_title(title: str):
+async def get_subject_by_title(title: str):
     """
     Поиск осуществляется по регулярному выражению, записанному в таблице в атрибуте regex
     """
@@ -92,11 +92,11 @@ async def get_status_by_title(title: str):
 
 
 @router.put(
-    "/types/id/{id}",
+    "/id/{id}",
     status_code=status.HTTP_202_ACCEPTED,
     description="Обновление записи типа субъекта по ID",
 )
-async def update_status_by_id(id: int, data: RequirementSubjectTypeData):
+async def update_subject_by_id(id: int, data: RequirementSubjectTypeData):
     record = await RequirementSubject.get_or_none(id=id)
     if record:
         try:
@@ -114,11 +114,11 @@ async def update_status_by_id(id: int, data: RequirementSubjectTypeData):
 
 
 @router.put(
-    "/types/guid/{guid}",
+    "/guid/{guid}",
     status_code=status.HTTP_202_ACCEPTED,
     description="Обновление записи типа субъекта по GUID",
 )
-async def update_status_by_guid(guid: UUID, data: RequirementSubjectTypeData):
+async def update_subject_by_guid(guid: UUID, data: RequirementSubjectTypeData):
     record = await RequirementSubject.get_or_none(uid=guid)
     if not record:
         raise HTTPException(
@@ -134,11 +134,11 @@ async def update_status_by_guid(guid: UUID, data: RequirementSubjectTypeData):
         )
     
 @router.delete(
-    "/types/guid/{guid}",
+    "/guid/{guid}",
     status_code=status.HTTP_202_ACCEPTED,
     description="Удаление записи типа субъекта по GUID",
 )
-async def delete_status_by_guid(guid: UUID,background_tasks: BackgroundTasks):
+async def delete_subject_by_guid(guid: UUID):
     record = await RequirementSubject.get_or_none(uid=guid)
     if not record:
         raise HTTPException(
@@ -153,16 +153,15 @@ async def delete_status_by_guid(guid: UUID,background_tasks: BackgroundTasks):
             detail="Запись не существует",
         )
     else:
-        background_tasks.add_task(recalc_pk, RequirementSubject)
         return status.HTTP_200_OK
         
 
 @router.delete(
-    "/types/id/{id}",
+    "/id/{id}",
     status_code=status.HTTP_202_ACCEPTED,
     description="Удаление записи типа субъекта по ID",
 )
-async def delete_status_by_id(id: int, background_tasks: BackgroundTasks):
+async def delete_subject_by_id(id: int):
     record = await RequirementSubject.get_or_none(id=id)
     if not record:
         raise HTTPException(
@@ -177,16 +176,15 @@ async def delete_status_by_id(id: int, background_tasks: BackgroundTasks):
             detail="Запись не существует",
         )
     else:
-        background_tasks.add_task(recalc_pk, RequirementSubject)
         return status.HTTP_200_OK
 
 
 @router.post(
-    "/types",
+    " ",
     status_code=status.HTTP_201_CREATED,
     description="Создание нового типа субъекта ОТ",
 )
-async def create_new_status(data: RequirementSubjectTypeData):
+async def create_new_subject(data: RequirementSubjectTypeData):
     if not data.title or not data.regex:
         raise HTTPException(
             status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
