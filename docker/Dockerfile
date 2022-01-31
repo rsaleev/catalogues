@@ -1,11 +1,13 @@
 # syntax=docker/dockerfile:1
 
-ARG RELEASE_VERSION=latest
-ARG OWNER=rsaleev 
-ARG REPO=catalogues
-ARG TOKEN=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
 
 FROM nginx/unit:1.26.1-minimal
+
+ARG RELEASE_VERSION=${RELEASE_VERSION}
+ARG OWNER=${OWNER}
+ARG REPO=${REPO}
+ARG TOKEN=${TOKEN}
+
 
 LABEL maintainer="rs.aleev@gmail.com"
 # install python 3
@@ -22,22 +24,22 @@ RUN apt update && apt install -y unit-python3.9
 RUN apt autoremove --purge --allow-remove-essential -y
 RUN apt remove -y lsb-release               \                                                       
     && rm -rf /var/lib/apt/lists/* /etc/apt/sources.list.d/*.list
+RUN apt upgrade tar
 # install poetry
-RUN curl -sSL https://raw.githubusercontent.com/python-poetry/poetry/master/get-poetry.py | python -
+RUN pip3 install poetry
 # create project folder
 RUN mkdir -p /var/www/catalogues
 # setup working directory
 WORKDIR /var/www/catalogues
 # copy code and other necessary folder to destination
-RUN curl -JLO -H "Authorization: token ${TOKEN}" https://github.com/${OWNER}/${REPO}/archive/${RELEASE_VERSION}.tar.gz 
-RUN tar -xf ${RELEASE_VERSION}.tar.gz -C /var/www/catalogues/
+RUN curl -JLO -H "Authorization: token ${TOKEN}" https://github.com/${OWNER}/${REPO}/archive/${RELEASE_VERSION}.tar.gz
+RUN tar -xf ${REPO}-${RELEASE_VERSION}.tar.gz --strip-components=1 
 # copy configuration
-ADD ./src/config ./src/config
-ENV SCHEMES_PATH=/var/www/schemes/schemes
-
+ADD ./config ./src/
 # install python3 requirements
 RUN poetry install
 # create persistent volume
+ADD ./unitd.json /docker-entrypoint.d/config.json
 VOLUME ["/var/www", "/var/log/nginx", "/etc/nginx"]
 # expose 80 port
 EXPOSE 80
@@ -46,6 +48,6 @@ RUN chown -R unit:unit /var/www/catalogues
 
 # STOPSIGNAL SIGTERM
 
-ENTRYPOINT ["/usr/local/bin/docker-entrypoint.sh"]
+#ENTRYPOINT ["/usr/local/bin/docker-entrypoint.sh"]
 
 CMD ["unitd","--no-daemon","--control","unix:/var/run/control.unit.sock"]

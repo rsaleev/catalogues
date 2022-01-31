@@ -1,0 +1,17 @@
+services:
+  catalogues:
+    restart: always
+    build:
+      context: .  
+      args: 
+        - RELEASE_VERSION=latest
+        - OWNER=rsaleev
+        - REPO=catalogues
+        - TOKEN=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
+    expose:
+     - "80"
+    container_name: catalogues_fastapi
+
+networks:
+  default:
+    name: catalogues
