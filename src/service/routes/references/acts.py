@@ -16,18 +16,15 @@ from src.service.schemas.references import (
     RequirementActTypesView,
     RequirementActTypeData,
 )
-from src.database.helpers import recalc_pk
 
-ROUTE = "/references/acts"
-
-router = APIRouter(prefix=ROUTE,tags=["Тип акта ОТ"])
+router = APIRouter(prefix="/references/acts",tags=["Тип акта ОТ"])
 
 @router.get(
     "",
     response_model=RequirementActTypesView,
     description="Список типов актов ОТ",
 )
-async def get_types():
+async def get_acts():
     records = await RequirementActTypesView.from_queryset(RequirementActType.all())
     return records
 
@@ -157,7 +154,6 @@ async def delete_type_by_guid(guid: UUID, background_tasks: BackgroundTasks):
             detail="Запись не существует",
         )
     else:
-        background_tasks.add_task(recalc_pk, RequirementActType)
         return status.HTTP_200_OK
         
 
@@ -166,7 +162,7 @@ async def delete_type_by_guid(guid: UUID, background_tasks: BackgroundTasks):
     status_code=status.HTTP_202_ACCEPTED,
     description="Удаление записи статуса публикации по GUID",
 )
-async def delete_status_by_id(id: int, background_tasks: BackgroundTasks):
+async def delete_status_by_id(id: int):
     record = await RequirementActType.get_or_none(id=id)
     if not record:
         raise HTTPException(
@@ -181,7 +177,6 @@ async def delete_status_by_id(id: int, background_tasks: BackgroundTasks):
             detail="Запись не существует",
         )
     else:
-        background_tasks.add_task(recalc_pk, RequirementActType)
         return status.HTTP_200_OK
 
   
