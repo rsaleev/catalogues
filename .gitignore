@@ -143,3 +143,4 @@ poetry.*
 */config
 
 secrets
+token
