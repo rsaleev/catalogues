@@ -142,5 +142,4 @@ poetry.*
 *.toml
 */config
 *.env
-docker/config/
-docker/*.json
+docker/*
