@@ -22,10 +22,10 @@ router = APIRouter(prefix="/references/levels",tags=["Виды контроля 
 
 @router.get(
     "",
-    response_model=RequirementControlLevelView,
-    description="Список видов контроля",
+    response_model=RequirementControlLevelsView,
+    description="Список уровней контроля",
 )
-async def get_acts():
+async def get_levels():
     records = await RequirementControlLevelView.from_queryset(RequirementControlLevel.all())
     return records
 
@@ -34,7 +34,7 @@ async def get_acts():
     response_model=RequirementControlLevelView,
     description="Тип акта ОТ по ID записи",
 )
-async def get_act_by_id(id: int):
+async def get_level_by_id(id: int):
     record = await RequirementControlLevelView.from_queryset_single(
         RequirementControlLevel.get_or_none(id=id)
     )
@@ -58,11 +58,11 @@ async def get_status_by_guid(guid: UUID):
         raise HTTPException(status_code=404, detail="Запись не найдена")
 
 @router.get(
-    "/acts/title/{title}" ,response_model=RequirementControlLevelView,
-    description="Поиск статуса публикации ОТ по описанию",
+    "/title/{title}" ,response_model=RequirementControlLevelView,
+    description="Поиск уровня контроля по описанию",
     status_code=status.HTTP_200_OK
 )
-async def get_act_by_title(title: str):
+async def get_level_by_title(title: str):
     """
     Поиск осуществляется по регулярному выражению, записанному в таблице в атрибуте regex
     """
@@ -77,8 +77,8 @@ async def get_act_by_title(title: str):
         raise HTTPException(status.HTTP_404_NOT_FOUND, detail="Запись не найдена")
 
 
-@router.put("/acts/id/{id}", status_code=status.HTTP_200_OK, description="Изменение записи по ID")
-async def update_act_by_id(id: int, data: RequirementControlLevelData):
+@router.put("/id/{id}", status_code=status.HTTP_200_OK, description="Изменение записи по ID")
+async def update_level_by_id(id: int, data: RequirementControlLevelData):
     record = await RequirementControlLevel.get_or_none(id=id)
     if not record:
         raise HTTPException(
@@ -94,8 +94,8 @@ async def update_act_by_id(id: int, data: RequirementControlLevelData):
         )
 
 
-@router.put("/acts/guid/{guid}", status_code=status.HTTP_200_OK, description="Изменение записи по GUID")
-async def update_act_by_guid(guid: UUID, data: RequirementControlLevelData):
+@router.put("/guid/{guid}", status_code=status.HTTP_200_OK, description="Изменение записи по GUID")
+async def update_level_by_guid(guid: UUID, data: RequirementControlLevelData):
     record = await RequirementControlLevel.get_or_none(uid=guid)
     if not record:
         raise HTTPException(
@@ -110,8 +110,8 @@ async def update_act_by_guid(guid: UUID, data: RequirementControlLevelData):
             detail="Ошибка обновления записи",
         )
 
-@router.post("/acts", status_code=status.HTTP_201_CREATED, description="Создание типа акта")
-async def create_act(data:RequirementControlLevelData):
+@router.post("", status_code=status.HTTP_201_CREATED, description="Создание уровня контроля")
+async def create_level(data:RequirementControlLevelData):
     if not data.title or not data.regex:
         raise HTTPException(
             status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
@@ -134,9 +134,9 @@ async def create_act(data:RequirementControlLevelData):
         )
 
 @router.delete(
-    "/acts/guid/{guid}",
+    "/guid/{guid}",
     status_code=status.HTTP_202_ACCEPTED,
-    description="Удаление записи статуса публикации по GUID",
+    description="Удаление записи уровня контроля по GUID",
 )
 async def delete_type_by_guid(guid: UUID):
     record = await RequirementControlLevel.get_or_none(uid=guid)
@@ -157,9 +157,9 @@ async def delete_type_by_guid(guid: UUID):
         
 
 @router.delete(
-    "/acts/id/{id}",
+    "/id/{id}",
     status_code=status.HTTP_202_ACCEPTED,
-    description="Удаление записи статуса публикации по GUID",
+    description="Удаление записи уровня контроля по GUID",
 )
 async def delete_status_by_id(id:int):
     record = await RequirementControlLevel.get_or_none(id=id)
