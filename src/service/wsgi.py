@@ -20,6 +20,8 @@ from src.service.routes import catalogues
 from src.service.routes.references import acts
 from src.service.routes.references import subjects
 from src.service.routes.references import working
+from src.service.routes.references import organizations
+from src.service.routes.references import levels
 
 settings = Settings()
 
@@ -52,6 +54,8 @@ app.include_router(catalogues.router)
 app.include_router(acts.router)
 app.include_router(subjects.router)
 app.include_router(working.router)
+app.include_router(levels.router)
+app.include_router(organizations.router)
 
 
 register_tortoise(
