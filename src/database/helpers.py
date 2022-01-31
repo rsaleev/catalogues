@@ -20,7 +20,7 @@ def format_date(value:Union[date,None])->str:
     else:
         return value.strftime('%d-%m-%Y')
 
-def format_array(value:List[Any])->str:
+def format_array(value:List[Any],sep=' ')->str:
     """format_array
 
 
@@ -30,7 +30,7 @@ def format_array(value:List[Any])->str:
     Returns:
         str: контатенированная строка
     """
-    return ''.join(value)
+    return sep.join(value)
 
 
 async def recalc_pk(model:ORMModel):
