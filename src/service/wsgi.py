@@ -15,11 +15,11 @@ from tortoise import Tortoise
 
 from src.service.settings import Settings
 
-from src.service.routes.references import publication
+from src.service.routes.references import publications
 from src.service.routes import catalogues
 from src.service.routes.references import acts
 from src.service.routes.references import subjects
-from src.service.routes.references import work
+from src.service.routes.references import working
 
 settings = Settings()
 
@@ -47,11 +47,11 @@ app.add_middleware(
     allow_headers=settings.cors_allow_headers,
 )
 
-app.include_router(publication.router)
+app.include_router(publications.router)
 app.include_router(catalogues.router)
 app.include_router(acts.router)
 app.include_router(subjects.router)
-app.include_router(work.router)
+app.include_router(working.router)
 
 
 register_tortoise(
