@@ -5,6 +5,7 @@ tests/
 .pylint*
 
 # exclude Docker files
+docker/
 Dockerfile
 .dockerignore
 
