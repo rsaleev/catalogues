@@ -81,7 +81,6 @@ RequirementWorkStatusesView = pydantic_queryset_creator(RequirementWorkStatus)
 
 class RequirementValidityStatusData(BaseModel):
     """
-
     Тело запроса для методов POST/PUT
     """
 
@@ -91,3 +90,27 @@ class RequirementValidityStatusData(BaseModel):
 RequirementValidityStatusView = pydantic_model_creator(RequirementValidityStatus)
 RequirementValidityStatusesView = pydantic_queryset_creator(RequirementValidityStatus)
 
+# Уровень контроля
+class RequirementControlLevelData(BaseModel):
+    """
+    Тело запроса для методов POST/PUT
+    """
+    
+    title: Optional[str] = Field(..., max_length=255, description='Наименование уровня контроля')
+    regex: Optional[str] = Field(..., max_length=255, description='Паттерн регулярного выражения')
+
+RequirementControlLevelView = pydantic_model_creator(RequirementControlLevel)
+RequirementControlLevelsView = pydantic_queryset_creator(RequirementControlLevel)
+
+
+# Тип организации
+class RequirementControlOrgData(BaseModel):
+    """
+    Тело запроса для методов POST/PUT
+    """
+
+    title: Optional[str] = Field(..., max_length=255, description='Наименование уровня контроля')
+    regex: Optional[str] = Field(..., max_length=255, description='Паттерн регулярного выражения')
+
+RequirementControlOrgView = pydantic_model_creator(RequirementControlOrganization)
+RequirementControlOrgsView = pydantic_queryset_creator(RequirementControlOrganization)
