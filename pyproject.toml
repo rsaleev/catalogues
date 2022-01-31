@@ -1,7 +1,7 @@
 [tool.poetry]
 name = "catalogues"
 version = "0.1.0"
-description = ""
+description = "Сервис справочников КНД"
 authors = ["rsaleev <rs.aleev@gmail.com>"]
 packages = [
     {include = "./src"}
