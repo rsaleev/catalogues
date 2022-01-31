@@ -17,7 +17,7 @@ from src.service.schemas.references import (
     RequirementActTypeData,
 )
 
-router = APIRouter(prefix="/references/acts",tags=["Тип акта ОТ"])
+router = APIRouter(prefix="/references/acts", tags=["Тип акта ОТ"])
 
 @router.get(
     "",
@@ -58,7 +58,7 @@ async def get_status_by_guid(guid: UUID):
         raise HTTPException(status_code=404, detail="Запись не найдена")
 
 @router.get(
-    "/acts/title/{title}",
+    "/title/{title}",
     response_model=RequirementActTypeView,
     description="Поиск статуса публикации ОТ по описанию",
     status_code=status.HTTP_200_OK
@@ -78,7 +78,7 @@ async def get_act_by_title(title: str):
         raise HTTPException(status_code=404, detail="Запись не найдена")
 
 
-@router.put("/acts/id/{id}", status_code=status.HTTP_200_OK, description="Изменение записи по ID")
+@router.put("/id/{id}", status_code=status.HTTP_200_OK, description="Изменение записи по ID")
 async def update_act_by_id(id: int, data: RequirementActTypeData):
     record = await RequirementActType.get_or_none(id=id)
     if not record:
@@ -95,7 +95,7 @@ async def update_act_by_id(id: int, data: RequirementActTypeData):
         )
 
 
-@router.put("/acts/guid/{guid}", status_code=status.HTTP_200_OK, description="Изменение записи по GUID")
+@router.put("/guid/{guid}", status_code=status.HTTP_200_OK, description="Изменение записи по GUID")
 async def update_act_by_guid(guid: UUID, data: RequirementActTypeData):
     record = await RequirementActType.get_or_none(uid=guid)
     if not record:
@@ -135,11 +135,11 @@ async def create_act(data:RequirementActTypeData):
         )
 
 @router.delete(
-    "/acts/guid/{guid}",
+    "/guid/{guid}",
     status_code=status.HTTP_202_ACCEPTED,
     description="Удаление записи статуса публикации по GUID",
 )
-async def delete_type_by_guid(guid: UUID, background_tasks: BackgroundTasks):
+async def delete_act_by_guid(guid: UUID, background_tasks: BackgroundTasks):
     record = await RequirementActType.get_or_none(uid=guid)
     if not record:
         raise HTTPException(
@@ -158,11 +158,11 @@ async def delete_type_by_guid(guid: UUID, background_tasks: BackgroundTasks):
         
 
 @router.delete(
-    "/acts/id/{id}",
+    "/id/{id}",
     status_code=status.HTTP_202_ACCEPTED,
     description="Удаление записи статуса публикации по GUID",
 )
-async def delete_status_by_id(id: int):
+async def delete_act_by_id(id: int):
     record = await RequirementActType.get_or_none(id=id)
     if not record:
         raise HTTPException(
