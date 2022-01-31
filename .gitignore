@@ -142,5 +142,4 @@ poetry.*
 *.toml
 */config
 
-
-build.sh
+secrets
