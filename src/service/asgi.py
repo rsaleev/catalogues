@@ -1,3 +1,4 @@
+from genericpath import exists
 import os
 
 from json import loads
@@ -13,7 +14,8 @@ from fastapi.openapi.docs import (
 from tortoise.contrib.fastapi import register_tortoise
 from tortoise import Tortoise
 
-from src.service.settings import Settings
+from src.config.service import Settings
+from src.config.database import CONFIG
 
 from src.service.routes.references import publications
 from src.service.routes import catalogues
@@ -22,6 +24,7 @@ from src.service.routes.references import subjects
 from src.service.routes.references import working
 from src.service.routes.references import organizations
 from src.service.routes.references import levels
+
 
 settings = Settings()
 
@@ -35,7 +38,6 @@ app.description = settings.fastapi_app_title
 
 app.state.static_folder = "./src/service/static"
 app.state.temp_folder = "./src/service/temp"
-app.state.db_config = "./src/config/database.json"
 
 
 app.mount("/static", StaticFiles(directory=app.state.static_folder), name='static')
@@ -49,28 +51,29 @@ app.add_middleware(
     allow_headers=settings.cors_allow_headers,
 )
 
-app.include_router(publications.router)
-app.include_router(catalogues.router)
-app.include_router(acts.router)
-app.include_router(subjects.router)
-app.include_router(working.router)
-app.include_router(levels.router)
-app.include_router(organizations.router)
+# app.include_router(publications.router)
+# app.include_router(catalogues.router)
+# app.include_router(acts.router)
+# app.include_router(subjects.router)
+# app.include_router(working.router)
+# app.include_router(levels.router)
+# app.include_router(organizations.router)
 
 
-register_tortoise(
-    app,
-    config_file=app.state.db_config,
-    generate_schemas=True,
-    add_exception_handlers=False,
-)
+# register_tortoise(
+#     app,
+#     config=CONFIG,
+#     generate_schemas=True,
+#     add_exception_handlers=False,
+# )
 
 @app.get("/health", include_in_schema=False)
 async def get_status():
-    if Tortoise._inited:
-        return 1
-    else:
-        return 0
+    # if Tortoise._inited:
+    #     return 1
+    # else:
+    #     return 0
+    return 1
 
 @app.get("/docs", include_in_schema=False)
 async def custom_swagger_ui_html():
