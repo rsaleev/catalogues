@@ -1,0 +1,20 @@
+{
+    "listeners": {
+        "*:80": {
+            "pass": "applications/catalogues"
+        }
+    },
+
+    "applications": {
+        "catalogues": {
+            "type": "python",
+            "processes":4,
+            "working_directory":"/var/www/catalogues",
+            "path": "/var/www/catalogues",
+            "module": "src.service.asgi",
+            "callable":"app",
+            "user": "unit",
+            "group": "unit"
+        }
+    }
+}
