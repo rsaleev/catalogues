@@ -27,7 +27,7 @@ ADD ./docker/app/requirements.txt .
 RUN pip3 install -r requirements.txt
 COPY src ./src
 # create persistent volume
-COPY ./app/docker/config.json /docker-entrypoint.d/config.json
+COPY ./docker/app/config.json /docker-entrypoint.d/config.json
 # expose 80 port
 EXPOSE 80
 # change ownership for isapt-transport-httpsolation
