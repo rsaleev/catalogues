@@ -1,0 +1,53 @@
+services:
+  database:
+    env_file: .env
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    build:
+      context: ..
+      dockerfile: ./docker/database/Dockerfile
+    volumes:
+      - catalogues_database:/var/lib/postgresql/data
+    network_mode: bridge  
+    ports:
+      - ${POSTGRES_EXTERNAL_PORT}:${POSTGRES_PORT}
+    container_name: catalogues_database
+    restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          cpus: '4'
+          memory: 4G
+    shm_size: '256mb'
+
+  catalogues:
+    env_file: .env
+    restart: unless-stopped
+    build:
+      context: ..  
+      dockerfile: ./docker/app/Dockerfile
+    depends_on:
+      - database
+    links:
+      - database
+    expose:
+      - "80"
+    environment:
+      DB_USER: ${DB_USER}
+      DB_PASSWORD: ${DB_PASSWORD}
+      DB_PORT: ${POSTGRES_PORT}
+      DB_HOST: database
+
+    volumes:
+     - catalogues_app:/var/www:rw
+    container_name: catalogues_web
+    deploy:
+      resources:
+        limits:
+          cpus: '4'
+          memory: 2G
+
+volumes:
+  catalogues_app: {}
+  catalogues_database: {}
