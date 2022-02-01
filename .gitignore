@@ -139,6 +139,4 @@ cython_debug/
 .venv/
 .vscode/
 poetry.*
-*/config
 *.env
-docker/*
