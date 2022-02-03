@@ -9,10 +9,9 @@ FROM library/postgres:14.1-bullseye
 
 LABEL maintainer="rs.aleev@gmail.com"
 # copy initb script
-COPY ./docker/database/init-user-db.sh /docker-entrypoint-initdb.d/
-# change ownership 
-RUN chown postgres:postgres /docker-entrypoint-initdb.d/*.sh
-# change mode to executable
+COPY ./docker/database/init/ /docker-entrypoint-initdb.d/
+# change ownership to script 
+RUN chown postgres:postgres /docker-entrypoint-initdb.d/*
 RUN chmod +X /docker-entrypoint-initdb.d/*.sh
 # copy configuration file
 COPY ./docker/database/postgresql.conf /etc/postgresql/

@@ -1,53 +1,81 @@
 services:
-  database:
+  postgres:
     env_file: .env
-    environment:
-      POSTGRES_USER: ${POSTGRES_USER}
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    restart: unless-stopped
     build:
       context: ..
       dockerfile: ./docker/database/Dockerfile
+    environment:
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
     volumes:
-      - catalogues_database:/var/lib/postgresql/data
-    network_mode: bridge  
+      - database:/var/lib/postgresql/data
     ports:
       - ${POSTGRES_EXTERNAL_PORT}:${POSTGRES_PORT}
     container_name: catalogues_database
-    restart: unless-stopped
+    networks:
+      shared:
+        ipv4_address: 172.26.0.2
+      dbnet:
+        
     deploy:
       resources:
         limits:
           cpus: '4'
           memory: 4G
     shm_size: '256mb'
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready --username ${POSTGRES_USER}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      
 
-  catalogues:
+  fastapi-unit:
     env_file: .env
     restart: unless-stopped
     build:
       context: ..  
       dockerfile: ./docker/app/Dockerfile
-    depends_on:
-      - database
     links:
-      - database
+     - postgres
+    depends_on:
+      postgres:
+       condition: service_healthy
     expose:
       - "80"
+    networks:
+      shared:
+        ipv4_address: 172.26.0.3
     environment:
-      DB_USER: ${DB_USER}
-      DB_PASSWORD: ${DB_PASSWORD}
-      DB_PORT: ${POSTGRES_PORT}
-      DB_HOST: database
-
+      - DB_USER=${DB_USER}
+      - DB_PASSWORD=${DB_PASSWORD}
+      - DB_PORT=${POSTGRES_PORT}
+      - DB_HOST=postgres
     volumes:
-     - catalogues_app:/var/www:rw
+     - app:/var/www:rw
     container_name: catalogues_web
     deploy:
       resources:
         limits:
           cpus: '4'
           memory: 2G
+      
 
 volumes:
-  catalogues_app: {}
-  catalogues_database: {}
+  app: {}
+  database: {}
+
+networks:
+  shared:
+    driver: bridge
+
+    ipam:
+      driver: default
+      config:
+        - subnet: 172.26.0.0/24
+          gateway: 172.26.0.1
+  dbnet:
+    external: true
+
+  
