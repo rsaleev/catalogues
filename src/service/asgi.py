@@ -1,7 +1,7 @@
 from genericpath import exists
 import os
 
-from json import loads
+from json import loads,dumps
 
 from fastapi import FastAPI, Depends
 from fastapi.middleware.cors import CORSMiddleware
@@ -66,17 +66,17 @@ app.include_router(r_publications)
 register_tortoise(
     app,
     config=CONFIG,
-    generate_schemas=True,
+    generate_schemas=False,
     add_exception_handlers=False,
 )
 
 @app.get("/health", include_in_schema=False)
 async def get_status():
-    if Tortoise._inited:
-        return 1
-    else:
-        return 0
-    return 1
+    # if Tortoise._inited:
+    #     return 1
+    # else:
+    #     return 0
+    return dumps(CONFIG)
 
 @app.get("/docs", include_in_schema=False)
 async def custom_swagger_ui_html():
