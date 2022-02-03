@@ -17,13 +17,15 @@ from tortoise import Tortoise
 from src.config.service import Settings
 from src.config.database import CONFIG
 
-from src.service.routes.references import publications
-from src.service.routes import catalogues
-from src.service.routes.references import acts
-from src.service.routes.references import subjects
-from src.service.routes.references import working
-from src.service.routes.references import organizations
-from src.service.routes.references import levels
+from src.service.routes.catalogues import router as r_catalogues
+from src.service.routes.references import router as r_references
+
+from src.service.routes.references.publications import router as r_publications
+from src.service.routes.references.acts import router as r_acts
+from src.service.routes.references.subjects import router as r_subjects
+from src.service.routes.references.working import router as r_working
+from src.service.routes.references.organizations import router as r_organizations
+from src.service.routes.references.levels import router as r_levels
 
 
 settings = Settings()
@@ -32,7 +34,7 @@ app = FastAPI(docs_url=None, redoc_url=None, debug=settings.fastapi_app_debug)
 
 app.title = settings.fastapi_app_title
 app.version = settings.fastapi_app_version
-app.contact = {'author':'Rostislav Aleev', 'mail':'rs.aleev@gmail.com'}
+app.contact = settings.fastapi_app_author
 app.description = settings.fastapi_app_title
 
 
@@ -51,28 +53,29 @@ app.add_middleware(
     allow_headers=settings.cors_allow_headers,
 )
 
-# app.include_router(publications.router)
-# app.include_router(catalogues.router)
-# app.include_router(acts.router)
-# app.include_router(subjects.router)
-# app.include_router(working.router)
-# app.include_router(levels.router)
-# app.include_router(organizations.router)
+app.include_router(r_catalogues)
+app.include_router(r_references)
+app.include_router(r_acts)
+app.include_router(r_subjects)
+app.include_router(r_working)
+app.include_router(r_levels)
+app.include_router(r_organizations)
+app.include_router(r_publications)
 
 
-# register_tortoise(
-#     app,
-#     config=CONFIG,
-#     generate_schemas=True,
-#     add_exception_handlers=False,
-# )
+register_tortoise(
+    app,
+    config=CONFIG,
+    generate_schemas=True,
+    add_exception_handlers=False,
+)
 
 @app.get("/health", include_in_schema=False)
 async def get_status():
-    # if Tortoise._inited:
-    #     return 1
-    # else:
-    #     return 0
+    if Tortoise._inited:
+        return 1
+    else:
+        return 0
     return 1
 
 @app.get("/docs", include_in_schema=False)
@@ -84,7 +87,6 @@ async def custom_swagger_ui_html():
         swagger_js_url="static/swagger-ui-bundle.js",
         swagger_css_url="static/swagger-ui.css",
     )
-
 
 @app.get(app.swagger_ui_oauth2_redirect_url, include_in_schema=False)
 async def swagger_ui_redirect():
