@@ -10,7 +10,8 @@ CONFIG = {
                 "host":os.environ['DB_HOST'],
                 "port":os.environ['DB_PORT'],
                 "database": "ervk",
-                "schema":"public"
+                "schema":"public",
+                "ssl":False
             }
         },
         "references": {
@@ -20,8 +21,9 @@ CONFIG = {
                 "password": os.environ['DB_PASSWORD'],
                 "host":os.environ['DB_HOST'],
                 "port":os.environ['DB_PORT'],
-                "database": "references",
-                "schema":"public"
+                "database": "reference",
+                "schema":"public",
+                "ssl":False
             }
         },
         "okved": {
@@ -32,7 +34,8 @@ CONFIG = {
                 "host":os.environ['DB_HOST'],
                 "port":os.environ['DB_PORT'],
                 "database":"okved",
-                "schema":"public"
+                "schema":"public",
+                "ssl":False
             }
         }
     },
