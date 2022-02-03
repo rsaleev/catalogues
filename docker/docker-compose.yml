@@ -14,10 +14,8 @@ services:
       - ${POSTGRES_EXTERNAL_PORT}:${POSTGRES_PORT}
     container_name: catalogues_database
     networks:
-      shared:
-        ipv4_address: 172.26.0.2
-      dbnet:
-        
+      - shared
+      - dbnet
     deploy:
       resources:
         limits:
@@ -45,8 +43,7 @@ services:
     expose:
       - "80"
     networks:
-      shared:
-        ipv4_address: 172.26.0.3
+      - shared
     environment:
       - DB_USER=${DB_USER}
       - DB_PASSWORD=${DB_PASSWORD}
@@ -69,12 +66,6 @@ volumes:
 networks:
   shared:
     driver: bridge
-
-    ipam:
-      driver: default
-      config:
-        - subnet: 172.26.0.0/24
-          gateway: 172.26.0.1
   dbnet:
     external: true
 
