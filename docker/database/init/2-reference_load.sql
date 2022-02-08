@@ -1167,4 +1167,5 @@ CREATE INDEX idx_ref_work_st_title_ebf137 ON public.ref_work_status USING btree 
 --
 -- PostgreSQL database dump complete
 --
+GRANT SELECT, INSERT, UPDATE, DELETE ON ALL TABLES IN SCHEMA public TO backend;
 

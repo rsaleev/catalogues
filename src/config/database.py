@@ -5,7 +5,7 @@ CONFIG = {
         "ervk": {
             "engine":"tortoise.backends.asyncpg",
             "credentials": {
-                "user": os.environ['DB_USER'],
+                "user": 'backend',
                 "password": os.environ['DB_PASSWORD'],
                 "host":os.environ['DB_HOST'],
                 "port":os.environ['DB_PORT'],
@@ -17,7 +17,7 @@ CONFIG = {
         "references": {
             "engine":"tortoise.backends.asyncpg",
             "credentials":{
-                "user":os.environ['DB_USER'],
+                "user":'backend',
                 "password": os.environ['DB_PASSWORD'],
                 "host":os.environ['DB_HOST'],
                 "port":os.environ['DB_PORT'],
@@ -29,7 +29,7 @@ CONFIG = {
         "okved": {
             "engine":"tortoise.backends.asyncpg",
             "credentials":{
-                "user":os.environ['DB_USER'],
+                "user":'backend',
                 "password":os.environ['DB_PASSWORD'],
                 "host":os.environ['DB_HOST'],
                 "port":os.environ['DB_PORT'],
