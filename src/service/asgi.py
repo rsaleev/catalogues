@@ -27,7 +27,7 @@ from src.service.routes.references.levels import router as r_levels
 
 settings = Settings()
 
-app = FastAPI(docs_url=None, redoc_url=None, debug=settings.fastapi_app_debug)
+app = FastAPI(docs_url=None, redoc_url=None, debug=settings.fastapi_app_debug, root_path='/catalogues')
 
 app.title = settings.fastapi_app_title
 app.version = settings.fastapi_app_version
@@ -77,7 +77,7 @@ async def get_status():
 @app.get("/api/docs", include_in_schema=False)
 async def custom_swagger_ui_html():
     return get_swagger_ui_html(
-        openapi_url="/api/openapi.json",
+        openapi_url=app.openapi_url,
         title=app.title + " - Swagger UI",
         oauth2_redirect_url=app.swagger_ui_oauth2_redirect_url,
         swagger_js_url="/static/swagger-ui-bundle.js",
