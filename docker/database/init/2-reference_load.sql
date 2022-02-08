@@ -130,7 +130,7 @@ CREATE TABLE public.ref_control_level (
     title character varying(255) NOT NULL,
     regex text NOT NULL,
     gisok_alias text,
-    code integer
+    code integer NOT NULL
 );
 
 
@@ -312,7 +312,7 @@ CREATE TABLE public.ref_publication_status (
     uid uuid NOT NULL,
     title character varying(255) NOT NULL,
     regex text NOT NULL,
-    code integer
+    code integer NOT NULL
 );
 
 
@@ -531,7 +531,7 @@ CREATE TABLE public.ref_validity_status (
     uid uuid NOT NULL,
     title character varying(255) NOT NULL,
     regex text NOT NULL,
-    code integer
+    code integer NOT NULL
 );
 
 
@@ -622,7 +622,7 @@ CREATE TABLE public.ref_work_status (
     uid uuid NOT NULL,
     title character varying(255) NOT NULL,
     regex text NOT NULL,
-    code integer
+    code integer NOT NULL
 );
 
 
@@ -895,8 +895,8 @@ INSERT INTO public.ref_validity_status VALUES (2, '853b1655-aa8c-4781-bad5-a1637
 -- Data for Name: ref_work_status; Type: TABLE DATA; Schema: public; Owner: -
 --
 
-INSERT INTO public.ref_work_status VALUES (1, '9bacdcf5-b249-4350-9395-40d493f67009', 'Проверка атрибутов ОТ', '^провер[а-я]+.*атриб[а-я]+.*(от|обязат[а-я]+.*треб[а-я]+).*$', NULL);
-INSERT INTO public.ref_work_status VALUES (2, '2234d98d-89d5-4dc7-995d-7566ee0b3c3b', 'Утверждено', '^утвер[а-я]+.*$', NULL);
+INSERT INTO public.ref_work_status VALUES (1, '9bacdcf5-b249-4350-9395-40d493f67009', 'Проверка атрибутов ОТ', '^провер[а-я]+.*атриб[а-я]+.*(от|обязат[а-я]+.*треб[а-я]+).*$', 0);
+INSERT INTO public.ref_work_status VALUES (2, '2234d98d-89d5-4dc7-995d-7566ee0b3c3b', 'Утверждено', '^утвер[а-я]+.*$', 1);
 
 
 --
