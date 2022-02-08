@@ -16,7 +16,6 @@ from src.service.schemas.references import (
     RequirementWorkStatusesView,
     RequirementWorkStatusData,
 )
-from src.database.helpers import recalc_pk
 
 router = APIRouter(prefix="/working", tags=["Статус работы с ОТ"])
 
