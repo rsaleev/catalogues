@@ -20,7 +20,7 @@ router = APIRouter(prefix="/publications", tags=['Статус публикац�
 
 
 @router.get(
-    "/list",
+    "",
     response_model=RequirementPublicationStatusesView,
     description="Список статусов публикации ОТ",
     status_code=status.HTTP_200_OK,
