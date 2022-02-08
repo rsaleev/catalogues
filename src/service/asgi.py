@@ -27,7 +27,7 @@ from src.service.routes.references.levels import router as r_levels
 
 settings = Settings()
 
-app = FastAPI(docs_url=None, redoc_url=None, debug=settings.fastapi_app_debug, root_path="/catalogues")
+app = FastAPI(docs_url=None, redoc_url=None, debug=settings.fastapi_app_debug)
 
 app.title = settings.fastapi_app_title
 app.version = settings.fastapi_app_version
@@ -52,7 +52,6 @@ app.add_middleware(
 
 app.include_router(r_catalogues)
 
-app.include_router(r_references, prefix='/references')
 app.include_router(r_acts, prefix='/references')
 app.include_router(r_subjects, prefix='/references')
 app.include_router(r_working, prefix='/references')
