@@ -14,7 +14,7 @@ services:
       - ${POSTGRES_EXTERNAL_PORT}:${POSTGRES_PORT}
     container_name: catalogues_database
     networks:
-      - shared
+      - catalogues
       - dbnet
     deploy:
       resources:
@@ -40,10 +40,8 @@ services:
     depends_on:
       postgres:
        condition: service_healthy
-    expose:
-      - "80"
     networks:
-      - shared
+      - catalogues
     environment:
       - DB_USER=${DB_USER}
       - DB_PASSWORD=${DB_PASSWORD}
@@ -64,7 +62,7 @@ volumes:
   database: {}
 
 networks:
-  shared:
+  catalogues:
     driver: bridge
   dbnet:
     external: true

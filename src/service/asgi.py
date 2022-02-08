@@ -1,6 +1,3 @@
-from genericpath import exists
-import os
-
 from json import loads,dumps
 
 from fastapi import FastAPI, Depends
@@ -54,13 +51,14 @@ app.add_middleware(
 )
 
 app.include_router(r_catalogues)
-app.include_router(r_references)
-app.include_router(r_acts)
-app.include_router(r_subjects)
-app.include_router(r_working)
-app.include_router(r_levels)
-app.include_router(r_organizations)
-app.include_router(r_publications)
+
+app.include_router(r_references, prefix='/references')
+app.include_router(r_acts, prefix='/references')
+app.include_router(r_subjects, prefix='/references')
+app.include_router(r_working, prefix='/references')
+app.include_router(r_levels, prefix='/references')
+app.include_router(r_organizations, prefix='/references')
+app.include_router(r_publications,prefix='/references')
 
 
 register_tortoise(
@@ -72,13 +70,12 @@ register_tortoise(
 
 @app.get("/health", include_in_schema=False)
 async def get_status():
-    # if Tortoise._inited:
-    #     return 1
-    # else:
-    #     return 0
-    return dumps(CONFIG)
+    if Tortoise._inited:
+        return 1
+    else:
+        return 0
 
-@app.get("/docs", include_in_schema=False)
+@app.get("/swagger", include_in_schema=False)
 async def custom_swagger_ui_html():
     return get_swagger_ui_html(
         openapi_url=app.openapi_url,

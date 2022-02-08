@@ -18,10 +18,10 @@ from src.service.schemas.references import (
 
 )
 
-router = APIRouter(prefix="/catalogues/references/organizations",tags=["Виды контролирующих органов"])
+router = APIRouter(prefix="/organizations",tags=["Виды контролирующих органов"])
 
 @router.get(
-    "",
+    "/list",
     response_model=RequirementControlOrgsView,
     description="Список КНО",
 )

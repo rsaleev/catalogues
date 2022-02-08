@@ -16,11 +16,11 @@ from src.service.schemas.references import (
 )
 
 
-router = APIRouter(prefix="/catalogues/references/publications", tags=['Статус публикации ОТ'])
+router = APIRouter(prefix="/publications", tags=['Статус публикации ОТ'])
 
 
 @router.get(
-    "",
+    "/list",
     response_model=RequirementPublicationStatusesView,
     description="Список статусов публикации ОТ",
     status_code=status.HTTP_200_OK,

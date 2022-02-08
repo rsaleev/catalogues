@@ -18,7 +18,7 @@ from src.service.schemas.references import (
 )
 from src.database.helpers import recalc_pk
 
-router = APIRouter(prefix="/catalogues/references/working", tags=["Статус работы с ОТ"])
+router = APIRouter(prefix="/working", tags=["Статус работы с ОТ"])
 
 
 @router.get(
