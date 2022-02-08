@@ -52,13 +52,13 @@ app.add_middleware(
 
 app.include_router(r_catalogues)
 
-app.include_router(r_references, prefix='/references')
-app.include_router(r_acts, prefix='/references')
-app.include_router(r_subjects, prefix='/references')
-app.include_router(r_working, prefix='/references')
-app.include_router(r_levels, prefix='/references')
-app.include_router(r_organizations, prefix='/references')
-app.include_router(r_publications,prefix='/references')
+app.include_router(r_references, prefix='/catalogues/references')
+app.include_router(r_acts)
+app.include_router(r_subjects, prefix='/catalogues/references')
+app.include_router(r_working, prefix='/catalogues/references')
+app.include_router(r_levels, prefix='/catalogues/references')
+app.include_router(r_organizations, prefix='/catalogues/references')
+app.include_router(r_publications,prefix='/catalogues/references')
 
 
 register_tortoise(
@@ -68,21 +68,21 @@ register_tortoise(
     add_exception_handlers=False,
 )
 
-@app.get("/health", include_in_schema=False)
+@app.get("/api/health", include_in_schema=False)
 async def get_status():
     if Tortoise._inited:
         return 1
     else:
         return 0
 
-@app.get("/docs", include_in_schema=False)
+@app.get("/api/docs", include_in_schema=False)
 async def custom_swagger_ui_html():
     return get_swagger_ui_html(
-        openapi_url=app.openapi_url,
+        openapi_url="/api/openapi.json",
         title=app.title + " - Swagger UI",
         oauth2_redirect_url=app.swagger_ui_oauth2_redirect_url,
-        swagger_js_url="static/swagger-ui-bundle.js",
-        swagger_css_url="static/swagger-ui.css",
+        swagger_js_url="/static/swagger-ui-bundle.js",
+        swagger_css_url="/static/swagger-ui.css",
     )
 
 @app.get(app.swagger_ui_oauth2_redirect_url, include_in_schema=False)
