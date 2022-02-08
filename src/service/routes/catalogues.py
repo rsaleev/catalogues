@@ -1,4 +1,4 @@
-from typing import List, Type
+from typing import List
 
 from itertools import groupby
 
@@ -17,7 +17,7 @@ from src.database.models import ervk
 
 from src.service.schemas.catalogues import CatalogueName, Catalogues, ORMModelDescription
 
-router = APIRouter(prefix="/catalogues", tags=['Список справочников в системе'])
+router = APIRouter(prefix="/list", tags=['Список справочников в системе'])
 
 
 class CatalogueTitle(Enum):
