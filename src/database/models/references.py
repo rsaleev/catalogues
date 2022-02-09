@@ -130,5 +130,6 @@ __models__ = [
     RequirementWorkStatus,
     RequirementControlOrganization,
     RequirementControlLevel,
-    RequirementRegulationLevel
+    RequirementRegulationLevel,
+    RequirementEvaluationForm
 ]
