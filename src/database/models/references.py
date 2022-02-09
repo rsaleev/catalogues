@@ -104,7 +104,22 @@ class RequirementControlLevel(ReferenceBaseModel):
         table_description = "Уровень контроля ОТ"
 
 
-    
+class RequirementRegulationLevel(ReferenceBaseModel):
+
+     class Meta:
+        app = "references"
+        table = "ref_regulation_level"
+        ordering = ["id"]
+        table_description = "Уровень регулирования ОТ"
+
+class RequirementEvaluationForm(ReferenceBaseModel):
+
+    class Meta:
+        app = "references"
+        table = "ref_evaluation_form"
+        ordering = ["id"]
+        table_description = "Форма оценки соблюдения ОТ"
+
 
 
 __models__ = [
@@ -114,5 +129,6 @@ __models__ = [
     RequirementValidityStatus,
     RequirementWorkStatus,
     RequirementControlOrganization,
-    RequirementControlLevel
+    RequirementControlLevel,
+    RequirementRegulationLevel
 ]

@@ -15,15 +15,14 @@ from src.config.service import Settings
 from src.config.database import CONFIG
 
 from src.service.routes.catalogues import router as r_catalogues
-from src.service.routes.references import router as r_references
 
 from src.service.routes.references.publications import router as r_publications
 from src.service.routes.references.acts import router as r_acts
 from src.service.routes.references.subjects import router as r_subjects
 from src.service.routes.references.working import router as r_working
 from src.service.routes.references.organizations import router as r_organizations
-from src.service.routes.references.levels import router as r_levels
-
+from src.service.routes.references.control import router as r_control
+from src.service.routes.references.regulation import router as r_regulation
 
 settings = Settings()
 
@@ -55,9 +54,11 @@ app.include_router(r_catalogues)
 app.include_router(r_acts, prefix='/references')
 app.include_router(r_subjects, prefix='/references')
 app.include_router(r_working, prefix='/references')
-app.include_router(r_levels, prefix='/references')
+app.include_router(r_control, prefix='/references')
 app.include_router(r_organizations, prefix='/references')
-app.include_router(r_publications,prefix='/references')
+app.include_router(r_publications, prefix='/references')
+app.include_router(r_regulation, prefix='/references')
+
 
 
 register_tortoise(

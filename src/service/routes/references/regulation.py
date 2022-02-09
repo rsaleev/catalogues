@@ -11,32 +11,32 @@ from tortoise.exceptions import IntegrityError, FieldError
 import re
 
 from src.service.schemas.references import (
-    RequirementControlLevel,
-    RequirementControlLevelData,
-    RequirementControlLevelView,
-    RequirementControlLevelsView
+    RequirementRegulationLevel,
+    RequirementRegulationLevelData,
+    RequirementRegulationLevelView,
+    RequirementRegulationLevelsView
 
 )
 
-router = APIRouter(prefix="/levels",tags=["Виды контроля ОТ"])
+router = APIRouter(prefix="/regulation",tags=["Виды регулирования ОТ"])
 
 @router.get(
     "",
-    response_model=RequirementControlLevelsView,
+    response_model=RequirementRegulationLevelsView,
     description="Список уровней контроля",
 )
 async def get_levels():
-    records = await RequirementControlLevelView.from_queryset(RequirementControlLevel.all())
+    records = await RequirementRegulationLevelView.from_queryset(RequirementRegulationLevel.all())
     return records
 
 @router.get(
     "/id/{id}",
-    response_model=RequirementControlLevelView,
+    response_model=RequirementRegulationLevelView,
     description="Тип акта ОТ по ID записи",
 )
 async def get_level_by_id(id: int):
-    record = await RequirementControlLevelView.from_queryset_single(
-        RequirementControlLevel.get_or_none(id=id)
+    record = await RequirementRegulationLevelView.from_queryset_single(
+        RequirementRegulationLevel.get_or_none(id=id)
     )
     if record:
         return record
@@ -45,12 +45,12 @@ async def get_level_by_id(id: int):
 
 router.get(
     "/guid/{guid}",
-    response_model=RequirementControlLevelView,
+    response_model=RequirementRegulationLevelView,
     description="Статус публикации ОТ по GUID записи",
 )
-async def get_status_by_guid(guid: UUID):
-    record = await RequirementControlLevelView.from_queryset_single(
-        RequirementControlLevel.get_or_none(guid=guid)
+async def get_level_by_guid(guid: UUID):
+    record = await RequirementRegulationLevelView.from_queryset_single(
+        RequirementRegulationLevel.get_or_none(guid=guid)
     )
     if record:
         return record
@@ -58,28 +58,28 @@ async def get_status_by_guid(guid: UUID):
         raise HTTPException(status_code=404, detail="Запись не найдена")
 
 @router.get(
-    "/title/{title}" ,response_model=RequirementControlLevelView,
-    description="Поиск уровня контроля по описанию",
+    "/title/{title}" ,response_model=RequirementRegulationLevelView,
+    description="Поиск уровня регулирования по описанию",
     status_code=status.HTTP_200_OK
 )
 async def get_level_by_title(title: str):
     """
     Поиск осуществляется по регулярному выражению, записанному в таблице в атрибуте regex
     """
-    records = await RequirementControlLevel.all()
-    result: Union[RequirementControlLevel, None] = next(
+    records = await RequirementRegulationLevel.all()
+    result: Union[RequirementRegulationLevel, None] = next(
         (r for r in records if re.match(r.regex, title, flags=re.I)), None
     )
     if result:
-        record = RequirementControlLevelView.from_orm(result)
+        record = RequirementRegulationLevelView.from_orm(result)
         return record
     else:
         raise HTTPException(status.HTTP_404_NOT_FOUND, detail="Запись не найдена")
 
 
 @router.put("/id/{id}", status_code=status.HTTP_200_OK, description="Изменение записи по ID")
-async def update_level_by_id(id: int, data: RequirementControlLevelData):
-    record = await RequirementControlLevel.get_or_none(id=id)
+async def update_level_by_id(id: int, data: RequirementRegulationLevelData):
+    record = await RequirementRegulationLevel.get_or_none(id=id)
     if not record:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND, detail="Запись не найдена"
@@ -95,8 +95,8 @@ async def update_level_by_id(id: int, data: RequirementControlLevelData):
 
 
 @router.put("/guid/{guid}", status_code=status.HTTP_200_OK, description="Изменение записи по GUID")
-async def update_level_by_guid(guid: UUID, data: RequirementControlLevelData):
-    record = await RequirementControlLevel.get_or_none(uid=guid)
+async def update_level_by_guid(guid: UUID, data: RequirementRegulationLevelData):
+    record = await RequirementRegulationLevel.get_or_none(uid=guid)
     if not record:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND, detail="Запись не найдена"
@@ -110,17 +110,17 @@ async def update_level_by_guid(guid: UUID, data: RequirementControlLevelData):
             detail="Ошибка обновления записи",
         )
 
-@router.post("", status_code=status.HTTP_201_CREATED, description="Создание уровня контроля")
-async def create_level(data:RequirementControlLevelData):
+@router.post("", status_code=status.HTTP_201_CREATED, description="Создание уровня регулирования")
+async def create_level(data:RequirementRegulationLevelData):
     if not data.title or not data.regex:
         raise HTTPException(
             status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
             detail="Тело запроса не соответствует схеме",
         )
-    record = await RequirementControlLevel.get_or_none(title=data.title)
+    record = await RequirementRegulationLevel.get_or_none(title=data.title)
     if not record:
         try:
-            await RequirementControlLevel.create(**data.dict())
+            await RequirementRegulationLevel.create(**data.dict())
         except (FieldError, IntegrityError):
             raise HTTPException(
                 status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
@@ -136,10 +136,10 @@ async def create_level(data:RequirementControlLevelData):
 @router.delete(
     "/guid/{guid}",
     status_code=status.HTTP_202_ACCEPTED,
-    description="Удаление записи уровня контроля по GUID",
+    description="Удаление записи уровня регулирования по GUID",
 )
-async def delete_type_by_guid(guid: UUID):
-    record = await RequirementControlLevel.get_or_none(uid=guid)
+async def delete_level_by_guid(guid: UUID):
+    record = await RequirementRegulationLevel.get_or_none(uid=guid)
     if not record:
         raise HTTPException(
                 status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
@@ -159,10 +159,10 @@ async def delete_type_by_guid(guid: UUID):
 @router.delete(
     "/id/{id}",
     status_code=status.HTTP_202_ACCEPTED,
-    description="Удаление записи уровня контроля по GUID",
+    description="Удаление записи уровня регулирования по GUID",
 )
 async def delete_status_by_id(id:int):
-    record = await RequirementControlLevel.get_or_none(id=id)
+    record = await RequirementRegulationLevel.get_or_none(id=id)
     if not record:
         raise HTTPException(
                 status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,

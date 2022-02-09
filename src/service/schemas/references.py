@@ -114,3 +114,18 @@ class RequirementControlOrgData(BaseModel):
 
 RequirementControlOrgView = pydantic_model_creator(RequirementControlOrganization)
 RequirementControlOrgsView = pydantic_queryset_creator(RequirementControlOrganization)
+
+
+class RequirementRegulationLevelData(BaseModel):
+    """
+    Тело запроса для методов POST/PUT
+    """
+
+    title: Optional[str] = Field(..., max_length=255, description='Наименование уровня регулирования')
+    regex: Optional[str] = Field(..., max_length=255, description='Паттерн регулярного выражения')
+
+RequirementRegulationLevelView = pydantic_model_creator(RequirementRegulationLevel)
+RequirementRegulationLevelsView = pydantic_queryset_creator(RequirementRegulationLevel)
+
+
+
