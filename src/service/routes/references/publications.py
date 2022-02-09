@@ -16,7 +16,7 @@ from src.service.schemas.references import (
 )
 
 
-router = APIRouter(prefix="/publications", tags=['Статус публикации ОТ'])
+router = APIRouter(prefix="/publications", tags=["Справочник ОТ", "Статус публикации ОТ"])
 
 
 @router.get(

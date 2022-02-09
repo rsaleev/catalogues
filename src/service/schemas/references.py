@@ -129,3 +129,13 @@ RequirementRegulationLevelsView = pydantic_queryset_creator(RequirementRegulatio
 
 
 
+class RequirementEvaluationFormData(BaseModel):
+    """
+    Тело запроса для методов POST/PUT
+    """
+
+    title: Optional[str] = Field(..., max_length=255, description='Наименование уровня регулирования')
+    regex: Optional[str] = Field(..., max_length=255, description='Паттерн регулярного выражения')
+
+RequirementEvaluationFormView = pydantic_model_creator(RequirementEvaluationForm)
+RequirementEvaluationFormsView = pydantic_queryset_creator(RequirementEvaluationForm)

@@ -17,7 +17,7 @@ from src.service.schemas.references import (
     RequirementActTypeData,
 )
 
-router = APIRouter(prefix="/acts", tags=["Тип акта ОТ"])
+router = APIRouter(prefix="/acts", tags=["Справочник ОТ", "Тип акта ОТ"])
 
 @router.get(
     "",

@@ -17,7 +17,7 @@ from src.database.models import ervk
 
 from src.service.schemas.catalogues import CatalogueName, Catalogues, ORMModelDescription
 
-router = APIRouter(prefix="/list", tags=['Список справочников в системе'])
+router = APIRouter(prefix="/list", tags=["Список справочников в системе"])
 
 
 class CatalogueTitle(Enum):
