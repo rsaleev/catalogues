@@ -18,10 +18,10 @@ from src.service.schemas.references import (
 
 )
 
-router = APIRouter(prefix="/control",tags=["Справочник ОТ", "Виды контроля ОТ"])
+router = APIRouter(prefix="/control",tags=["Виды контроля ОТ"])
 
 @router.get(
-    "",
+    "/list",
     response_model=RequirementControlLevelsView,
     description="Список уровней контроля",
 )

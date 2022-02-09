@@ -17,11 +17,11 @@ from src.service.schemas.references import (
     RequirementWorkStatusData,
 )
 
-router = APIRouter(prefix="/working", tags=["Справочник ОТ","Статус работы с ОТ"])
+router = APIRouter(prefix="/working", tags=["Статус работы с ОТ"])
 
 
 @router.get(
-    "",
+    "/list",
     response_model=RequirementWorkStatusesView,
     description="Список статусов работы с ОТ",
 )

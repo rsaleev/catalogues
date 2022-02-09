@@ -18,11 +18,11 @@ from src.service.schemas.references import (
 from src.database.helpers import recalc_pk
 
 
-router = APIRouter(prefix="/subjects", tags=["Справочник ОТ", "Типы субъектов"])
+router = APIRouter(prefix="/subjects", tags=["Типы субъектов"])
 
 
 @router.get(
-    "",
+    "/list",
     response_model=RequirementSubjectTypesView,
     description="Список типо субъектов ОТ",
     status_code=status.HTTP_200_OK,

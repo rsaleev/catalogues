@@ -18,10 +18,10 @@ from src.service.schemas.references import (
 
 )
 
-router = APIRouter(prefix="/evaluation",tags=["Справочник ОТ", "Вид проверки соблюдения ОТ"])
+router = APIRouter(prefix="/evaluation",tags=["Вид проверки соблюдения ОТ"])
 
 @router.get(
-    "",
+    "/list",
     response_model=RequirementEvaluationFormsView,
     description="Список форм оценок соблюдения ОТ",
 )
