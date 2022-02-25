@@ -8,6 +8,10 @@ from fastapi.openapi.docs import (
     get_swagger_ui_oauth2_redirect_html,
 )
 
+from fastapi_cache import FastAPICache
+from fastapi_cache.backends.inmemory import InMemoryBackend
+
+
 from tortoise.contrib.fastapi import register_tortoise
 from tortoise import Tortoise
 
@@ -23,6 +27,8 @@ from src.service.routes.references.working import router as r_working
 from src.service.routes.references.organizations import router as r_organizations
 from src.service.routes.references.control import router as r_control
 from src.service.routes.references.regulation import router as r_regulation
+from src.service.routes.references.evaluation import router as r_evaluation
+from src.service.routes.references.validity import router as r_validity
 
 settings = Settings()
 
@@ -58,6 +64,8 @@ app.include_router(r_control, prefix='/references')
 app.include_router(r_organizations, prefix='/references')
 app.include_router(r_publications, prefix='/references')
 app.include_router(r_regulation, prefix='/references')
+app.include_router(r_evaluation, prefix='/references')
+app.include_router(r_validity, prefix='/references')
 
 
 
@@ -67,6 +75,11 @@ register_tortoise(
     generate_schemas=False,
     add_exception_handlers=False,
 )
+
+@app.on_event("startup")
+async def startup():
+    FastAPICache.init(InMemoryBackend(), prefix="fastapi_cache")
+
 
 @app.get("/api/health", include_in_schema=False)
 async def get_status():

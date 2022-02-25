@@ -8,6 +8,8 @@ from fastapi.routing import APIRouter
 from fastapi.exceptions import HTTPException
 from fastapi import status
 
+from fastapi_cache.decorator import cache
+
 from tortoise.models import Model as ORMModel
 
 from src.database.models import references
@@ -62,6 +64,7 @@ def fetch_catalogues()->List[CatalogueName]:
     description="Получение списка справочников",
     status_code=status.HTTP_200_OK,
 )
+@cache(expire=20)
 async def get_all_catalogues():
     try:
         response = Catalogues(catalogues=fetch_catalogues())

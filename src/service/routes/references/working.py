@@ -6,6 +6,8 @@ from fastapi.routing import APIRouter
 from fastapi.exceptions import HTTPException
 from fastapi import status
 
+from fastapi_cache.decorator import cache
+
 from tortoise.exceptions import IntegrityError, FieldError
 
 import re
@@ -68,6 +70,7 @@ async def get_working_status_by_guid(guid: UUID):
     description="Поиск статуса работы с ОТ по описанию",
     status_code=status.HTTP_200_OK,
 )
+@cache(expire=60)
 async def get_working_status_by_title(title: str):
     """
     Поиск осуществляется по регулярному выражению, записанному в таблице в атрибуте regex

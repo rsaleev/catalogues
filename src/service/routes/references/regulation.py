@@ -8,6 +8,8 @@ from fastapi import status
 
 from tortoise.exceptions import IntegrityError, FieldError
 
+from fastapi_cache.decorator import cache
+
 import re
 
 from src.service.schemas.references import (
@@ -68,6 +70,7 @@ async def get_level_by_guid(guid: UUID):
     description="Поиск уровня регулирования по описанию",
     status_code=status.HTTP_200_OK,
 )
+@cache(expire=60)
 async def get_level_by_title(title: str):
     """
     Поиск осуществляется по регулярному выражению, записанному в таблице в атрибуте regex

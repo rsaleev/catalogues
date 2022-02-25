@@ -1,4 +1,4 @@
-from typing import Union, Type
+from typing import Union
 from uuid import UUID
 
 from fastapi.routing import APIRouter
@@ -7,43 +7,44 @@ from fastapi import status
 
 from fastapi_cache.decorator import cache
 
+
 from tortoise.exceptions import FieldError, IntegrityError
 
 import re
 
 from src.service.schemas.references import (
-    RequirementPublicationStatus,
-    RequirementPublicationStatusView,
-    RequirementPublicationStatusesView,
-    RequirementPublicationStatusData,
+    RequirementValidityStatus,
+    RequirementValidityStatusData,
+    RequirementValidityStatusView,
+    RequirementValidityStatusesView
 )
 
 
-router = APIRouter(prefix="/publications", tags=["Статус публикации ОТ"])
+router = APIRouter(prefix="/validity", tags=["Статус ОТ"])
 
 
 @router.get(
     "/list",
-    response_model=RequirementPublicationStatusesView,
-    description="Список статусов публикации ОТ",
+    response_model=RequirementValidityStatusesView,
+    description="Список статусов ОТ",
     status_code=status.HTTP_200_OK,
 )
-async def get_publications():
-    records = await RequirementPublicationStatusesView.from_queryset(
-        RequirementPublicationStatus.all()
+async def get_subjects():
+    records = await RequirementValidityStatusesView.from_queryset(
+       RequirementValidityStatus.all()
     )
     return records
 
 
 @router.get(
     "/id/{id}",
-    response_model=RequirementPublicationStatusView,
-    description="Статус публикации ОТ по ID записи",
+    response_model=RequirementValidityStatusView,
+    description="Тип статуса ОТ по ID записи",
     status_code=status.HTTP_200_OK,
 )
-async def get_publication_by_id(id: int):
-    record = await RequirementPublicationStatusView.from_queryset_single(
-        RequirementPublicationStatus.get_or_none(id=id)
+async def get_subject_by_id(id: int):
+    record = await RequirementValidityStatusView.from_queryset_single(
+       RequirementValidityStatus.get_or_none(id=id)
     )
     if record:
         return record
@@ -55,12 +56,12 @@ async def get_publication_by_id(id: int):
 
 @router.get(
     "/guid/{guid}",
-    response_model=RequirementPublicationStatusView,
-    description="Статус публикации ОТ по GUID записи",
+    response_model=RequirementValidityStatusView,
+    description="Тип статуса ОТ по GUID записи",
 )
-async def get_publication_by_guid(guid: UUID):
-    record = await RequirementPublicationStatusView.from_queryset_single(
-        RequirementPublicationStatus.get_or_none(uid=guid)
+async def get_subject_by_guid(guid: UUID):
+    record = await RequirementValidityStatusView.from_queryset_single(
+       RequirementValidityStatus.get_or_none(uid=guid)
     )
     if record:
         return record
@@ -72,20 +73,20 @@ async def get_publication_by_guid(guid: UUID):
 
 @router.get(
     "/title/{title}",
-    response_model=RequirementPublicationStatusView,
-    description="Поиск статуса публикации ОТ по описанию",
+    response_model=RequirementValidityStatusView,
+    description="Поиск статуса ОТ по описанию",
 )
 @cache(expire=60)
-async def get_publication_by_title(title: str):
+async def get_subject_by_title(title: str):
     """
     Поиск осуществляется по регулярному выражению, записанному в таблице в атрибуте regex
     """
-    records = await RequirementPublicationStatus.all()
-    result: Union[RequirementPublicationStatus, None] = next(
+    records = await RequirementValidityStatus.all()
+    result: Union[RequirementValidityStatus, None] = next(
         (r for r in records if re.match(r.regex, title, flags=re.I)), None
     )
     if result:
-        record = RequirementPublicationStatusView.from_orm(result)
+        record = RequirementValidityStatusView.from_orm(result)
         return record
     else:
         raise HTTPException(
@@ -96,10 +97,10 @@ async def get_publication_by_title(title: str):
 @router.put(
     "/id/{id}",
     status_code=status.HTTP_202_ACCEPTED,
-    description="Обновление записи статуса публикации по ID",
+    description="Обновление записи статуса ОТ по ID",
 )
-async def update_publication_by_id(id: int, data: RequirementPublicationStatusData):
-    record = await RequirementPublicationStatus.get_or_none(id=id)
+async def update_subject_by_id(id: int, data:RequirementValidityStatusData):
+    record = await RequirementValidityStatus.get_or_none(id=id)
     if record:
         try:
             await record.update_from_dict(data.dict(exclude_unset=True))
@@ -118,10 +119,10 @@ async def update_publication_by_id(id: int, data: RequirementPublicationStatusDa
 @router.put(
     "/guid/{guid}",
     status_code=status.HTTP_202_ACCEPTED,
-    description="Обновление записи статуса публикации по GUID",
+    description="Обновление записи статуса ОТ по GUID",
 )
-async def update_publication_by_guid(guid: UUID, data: RequirementPublicationStatusData):
-    record = await RequirementPublicationStatus.get_or_none(uid=guid)
+async def update_subject_by_guid(guid: UUID, data:RequirementValidityStatusData):
+    record = await RequirementValidityStatus.get_or_none(uid=guid)
     if not record:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND, detail="Запись не найдена"
@@ -138,10 +139,10 @@ async def update_publication_by_guid(guid: UUID, data: RequirementPublicationSta
 @router.delete(
     "/guid/{guid}",
     status_code=status.HTTP_202_ACCEPTED,
-    description="Удаление записи статуса публикации по GUID",
+    description="Удаление записи статуса ОТ по GUID",
 )
-async def delete_publication_by_guid(guid: UUID):
-    record = await RequirementPublicationStatus.get_or_none(uid=guid)
+async def delete_subject_by_guid(guid: UUID):
+    record = await RequirementValidityStatus.get_or_none(uid=guid)
     if not record:
         raise HTTPException(
                 status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
@@ -161,10 +162,10 @@ async def delete_publication_by_guid(guid: UUID):
 @router.delete(
     "/id/{id}",
     status_code=status.HTTP_202_ACCEPTED,
-    description="Удаление записи статуса публикации по ID",
+    description="Удаление записи статуса ОТ по ID",
 )
-async def delete_publication_by_id(id: int):
-    record = await RequirementPublicationStatus.get_or_none(id=id)
+async def delete_subject_by_id(id: int):
+    record = await RequirementValidityStatus.get_or_none(id=id)
     if not record:
         raise HTTPException(
                 status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
@@ -182,20 +183,20 @@ async def delete_publication_by_id(id: int):
 
 
 @router.post(
-    "",
+    " ",
     status_code=status.HTTP_201_CREATED,
-    description="Создание нового статуса публикации ОТ",
+    description="Создание нового типа статуса ОТ",
 )
-async def create_new_publication(data: RequirementPublicationStatusData):
+async def create_new_subject(data:RequirementValidityStatusData):
     if not data.title or not data.regex:
         raise HTTPException(
             status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
             detail="Тело запроса не соответствует схеме",
         )
-    record = await RequirementPublicationStatus.get_or_none(title=data.title)
+    record = await RequirementValidityStatus.get_or_none(title=data.title)
     if not record:
         try:
-            await RequirementPublicationStatus.create(**data.dict())
+            await RequirementValidityStatus.create(**data.dict())
         except (FieldError, IntegrityError):
             raise HTTPException(
                 status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,

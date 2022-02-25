@@ -5,6 +5,8 @@ from fastapi.routing import APIRouter
 from fastapi.exceptions import HTTPException
 from fastapi import status
 
+from fastapi_cache.decorator import cache
+
 from tortoise.exceptions import FieldError, IntegrityError
 
 import re
@@ -74,6 +76,7 @@ async def get_subject_by_guid(guid: UUID):
     response_model=RequirementSubjectTypeView,
     description="Поиск типа субъекта ОТ по описанию",
 )
+@cache(expire=60)
 async def get_subject_by_title(title: str):
     """
     Поиск осуществляется по регулярному выражению, записанному в таблице в атрибуте regex

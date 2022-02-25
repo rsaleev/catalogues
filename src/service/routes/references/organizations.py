@@ -8,6 +8,8 @@ from fastapi import status
 
 from tortoise.exceptions import IntegrityError, FieldError
 
+from fastapi_cache.decorator import cache
+
 import re
 
 from src.service.schemas.references import (
@@ -25,9 +27,6 @@ router = APIRouter(prefix="/organizations",tags=["Виды контролиру�
     response_model=RequirementControlOrgsView,
     description="Список КНО",
 )
-async def get_orgs():
-    records = await RequirementControlOrgView.from_queryset(RequirementControlOrganization.all())
-    return records
 
 @router.get(
     "/id/{id}",
@@ -62,6 +61,7 @@ async def get_org_by_guid(guid: UUID):
     description="Поиск КНО по описанию",
     status_code=status.HTTP_200_OK
 )
+@cache(expire=60)
 async def get_org_by_title(title: str):
     """
     Поиск осуществляется по регулярному выражению, записанному в таблице в атрибуте regex

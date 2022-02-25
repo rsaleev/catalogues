@@ -10,6 +10,8 @@ from tortoise.exceptions import IntegrityError, FieldError
 
 import re
 
+from fastapi_cache.decorator import cache
+
 from src.service.schemas.references import (
     RequirementEvaluationForm,
     RequirementEvaluationFormData,
@@ -62,6 +64,7 @@ async def get_level_by_guid(guid: UUID):
     description="Поиск формы оценки ОТ по описанию",
     status_code=status.HTTP_200_OK
 )
+@cache(expire=60)
 async def get_level_by_title(title: str):
     """
     Поиск осуществляется по регулярному выражению, записанному в таблице в атрибуте regex

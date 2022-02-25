@@ -83,7 +83,7 @@ class RequirementValidityStatus(ReferenceBaseModel):
 
 class RequirementControlOrganization(ReferenceBaseModel):
 
-    gisok_alias = TextField()
+    #gisok_alias = TextField()
     class Meta:
         app = "references"
         table = "ref_control_org"

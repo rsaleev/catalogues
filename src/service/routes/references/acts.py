@@ -6,6 +6,8 @@ from fastapi.routing import APIRouter
 from fastapi.exceptions import HTTPException
 from fastapi import status, BackgroundTasks
 
+from fastapi_cache.decorator import cache
+
 from tortoise.exceptions import IntegrityError, FieldError
 
 import re
@@ -63,14 +65,18 @@ async def get_status_by_guid(guid: UUID):
     description="Поиск статуса публикации ОТ по описанию",
     status_code=status.HTTP_200_OK
 )
+@cache(expire=60)
 async def get_act_by_title(title: str):
+    print(title)
     """
     Поиск осуществляется по регулярному выражению, записанному в таблице в атрибуте regex
     """
     records = await RequirementActType.all()
+    print([r.title for r in records])
     result: Union[RequirementActType, None] = next(
         (r for r in records if re.match(r.regex, title, flags=re.I)), None
     )
+    print(result)
     if result:
         record = RequirementActTypeView.from_orm(result)
         return record
