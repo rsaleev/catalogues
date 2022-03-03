@@ -65,7 +65,6 @@ async def get_level_by_guid(guid: UUID):
     description="Поиск уровня контроля по описанию",
     status_code=status.HTTP_200_OK
 )
-@cache(expire=60)
 async def get_level_by_title(title: str):
     """
     Поиск осуществляется по регулярному выражению, записанному в таблице в атрибуте regex
@@ -180,6 +179,4 @@ async def delete_level_by_id(id:int):
             detail="Запись не существует",
         )
     else:
-        return status.HTTP_200_OK
-
-  
+        return status.HTTP_200_OK  

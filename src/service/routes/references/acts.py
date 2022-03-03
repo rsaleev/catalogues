@@ -44,7 +44,6 @@ async def get_act_by_id(id: int):
     else:
         raise HTTPException(status_code=404, detail="Запись не найдена")
 
-
 @router.get(
     "/guid/{guid}",
     response_model=RequirementActTypeView,
@@ -65,18 +64,14 @@ async def get_status_by_guid(guid: UUID):
     description="Поиск статуса публикации ОТ по описанию",
     status_code=status.HTTP_200_OK
 )
-@cache(expire=60)
 async def get_act_by_title(title: str):
-    print(title)
     """
     Поиск осуществляется по регулярному выражению, записанному в таблице в атрибуте regex
     """
     records = await RequirementActType.all()
-    print([r.title for r in records])
     result: Union[RequirementActType, None] = next(
         (r for r in records if re.match(r.regex, title, flags=re.I)), None
     )
-    print(result)
     if result:
         record = RequirementActTypeView.from_orm(result)
         return record
@@ -99,7 +94,6 @@ async def update_act_by_id(id: int, data: RequirementActTypeData):
             status_code=status.HTTP_400_BAD_REQUEST,
             detail="Ошибка обновления записи",
         )
-
 
 @router.put("/guid/{guid}", status_code=status.HTTP_200_OK, description="Изменение записи по GUID")
 async def update_act_by_guid(guid: UUID, data: RequirementActTypeData):
@@ -160,8 +154,7 @@ async def delete_act_by_guid(guid: UUID, background_tasks: BackgroundTasks):
             detail="Запись не существует",
         )
     else:
-        return status.HTTP_200_OK
-        
+        return status.HTTP_200_OK      
 
 @router.delete(
     "/id/{id}",
@@ -184,5 +177,3 @@ async def delete_act_by_id(id: int):
         )
     else:
         return status.HTTP_200_OK
-
-  

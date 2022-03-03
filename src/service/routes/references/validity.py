@@ -35,7 +35,6 @@ async def get_subjects():
     )
     return records
 
-
 @router.get(
     "/id/{id}",
     response_model=RequirementValidityStatusView,
@@ -53,7 +52,6 @@ async def get_subject_by_id(id: int):
             status_code=status.HTTP_404_NOT_FOUND, detail="Запись не найдена"
         )
 
-
 @router.get(
     "/guid/{guid}",
     response_model=RequirementValidityStatusView,
@@ -70,13 +68,11 @@ async def get_subject_by_guid(guid: UUID):
             status_code=status.HTTP_404_NOT_FOUND, detail="Запись не найдена"
         )
 
-
 @router.get(
     "/title/{title}",
     response_model=RequirementValidityStatusView,
     description="Поиск статуса ОТ по описанию",
 )
-@cache(expire=60)
 async def get_subject_by_title(title: str):
     """
     Поиск осуществляется по регулярному выражению, записанному в таблице в атрибуте regex
@@ -92,7 +88,6 @@ async def get_subject_by_title(title: str):
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND, detail="Запись не найдена"
         )
-
 
 @router.put(
     "/id/{id}",
@@ -114,7 +109,6 @@ async def update_subject_by_id(id: int, data:RequirementValidityStatusData):
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND, detail="Запись не найдена"
         )
-
 
 @router.put(
     "/guid/{guid}",
@@ -158,7 +152,6 @@ async def delete_subject_by_guid(guid: UUID):
     else:
         return status.HTTP_200_OK
         
-
 @router.delete(
     "/id/{id}",
     status_code=status.HTTP_202_ACCEPTED,
@@ -180,7 +173,6 @@ async def delete_subject_by_id(id: int):
         )
     else:
         return status.HTTP_200_OK
-
 
 @router.post(
     " ",
@@ -208,4 +200,3 @@ async def create_new_subject(data:RequirementValidityStatusData):
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST, detail="Запись уже существует"
         )
-  

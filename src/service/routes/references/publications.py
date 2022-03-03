@@ -75,7 +75,6 @@ async def get_publication_by_guid(guid: UUID):
     response_model=RequirementPublicationStatusView,
     description="Поиск статуса публикации ОТ по описанию",
 )
-@cache(expire=60)
 async def get_publication_by_title(title: str):
     """
     Поиск осуществляется по регулярному выражению, записанному в таблице в атрибуте regex
@@ -91,7 +90,6 @@ async def get_publication_by_title(title: str):
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND, detail="Запись не найдена"
         )
-
 
 @router.put(
     "/id/{id}",
@@ -113,7 +111,6 @@ async def update_publication_by_id(id: int, data: RequirementPublicationStatusDa
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND, detail="Запись не найдена"
         )
-
 
 @router.put(
     "/guid/{guid}",
@@ -157,7 +154,6 @@ async def delete_publication_by_guid(guid: UUID):
     else:
         return status.HTTP_200_OK
         
-
 @router.delete(
     "/id/{id}",
     status_code=status.HTTP_202_ACCEPTED,
@@ -179,7 +175,6 @@ async def delete_publication_by_id(id: int):
         )
     else:
         return status.HTTP_200_OK
-
 
 @router.post(
     "",
@@ -207,4 +202,3 @@ async def create_new_publication(data: RequirementPublicationStatusData):
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST, detail="Запись уже существует"
         )
-  

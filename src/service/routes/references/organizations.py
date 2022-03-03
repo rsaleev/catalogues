@@ -42,7 +42,7 @@ async def get_org_by_id(id: int):
     else:
         raise HTTPException(status_code=404, detail="Запись не найдена")
 
-router.get(
+@router.get(
     "/guid/{guid}",
     response_model=RequirementControlOrgView,
     description="Запись о КНО по GUID записи",
@@ -61,7 +61,6 @@ async def get_org_by_guid(guid: UUID):
     description="Поиск КНО по описанию",
     status_code=status.HTTP_200_OK
 )
-@cache(expire=60)
 async def get_org_by_title(title: str):
     """
     Поиск осуществляется по регулярному выражению, записанному в таблице в атрибуте regex
@@ -177,5 +176,3 @@ async def delete_org_by_id(id:int):
         )
     else:
         return status.HTTP_200_OK
-
-  

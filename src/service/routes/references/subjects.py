@@ -76,7 +76,6 @@ async def get_subject_by_guid(guid: UUID):
     response_model=RequirementSubjectTypeView,
     description="Поиск типа субъекта ОТ по описанию",
 )
-@cache(expire=60)
 async def get_subject_by_title(title: str):
     """
     Поиск осуществляется по регулярному выражению, записанному в таблице в атрибуте regex
@@ -92,7 +91,6 @@ async def get_subject_by_title(title: str):
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND, detail="Запись не найдена"
         )
-
 
 @router.put(
     "/id/{id}",
@@ -114,7 +112,6 @@ async def update_subject_by_id(id: int, data: RequirementSubjectTypeData):
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND, detail="Запись не найдена"
         )
-
 
 @router.put(
     "/guid/{guid}",
@@ -156,8 +153,7 @@ async def delete_subject_by_guid(guid: UUID):
             detail="Запись не существует",
         )
     else:
-        return status.HTTP_200_OK
-        
+        return status.HTTP_200_OK     
 
 @router.delete(
     "/id/{id}",
@@ -180,7 +176,6 @@ async def delete_subject_by_id(id: int):
         )
     else:
         return status.HTTP_200_OK
-
 
 @router.post(
     " ",
@@ -208,4 +203,3 @@ async def create_new_subject(data: RequirementSubjectTypeData):
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST, detail="Запись уже существует"
         )
-  

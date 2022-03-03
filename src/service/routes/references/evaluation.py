@@ -64,7 +64,6 @@ async def get_level_by_guid(guid: UUID):
     description="Поиск формы оценки ОТ по описанию",
     status_code=status.HTTP_200_OK
 )
-@cache(expire=60)
 async def get_level_by_title(title: str):
     """
     Поиск осуществляется по регулярному выражению, записанному в таблице в атрибуте regex
@@ -78,7 +77,6 @@ async def get_level_by_title(title: str):
         return record
     else:
         raise HTTPException(status.HTTP_404_NOT_FOUND, detail="Запись не найдена")
-
 
 @router.put("/id/{id}", status_code=status.HTTP_200_OK, description="Изменение записи по ID")
 async def update_level_by_id(id: int, data: RequirementEvaluationFormData):
@@ -95,7 +93,6 @@ async def update_level_by_id(id: int, data: RequirementEvaluationFormData):
             status_code=status.HTTP_400_BAD_REQUEST,
             detail="Ошибка обновления записи",
         )
-
 
 @router.put("/guid/{guid}", status_code=status.HTTP_200_OK, description="Изменение записи по GUID")
 async def update_level_by_guid(guid: UUID, data: RequirementEvaluationFormData):
@@ -157,7 +154,6 @@ async def delete_level_by_guid(guid: UUID):
         )
     else:
         return status.HTTP_200_OK
-        
 
 @router.delete(
     "/id/{id}",

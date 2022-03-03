@@ -33,7 +33,6 @@ async def get_levels():
     )
     return records
 
-
 @router.get(
     "/id/{id}",
     response_model=RequirementRegulationLevelView,
@@ -47,7 +46,6 @@ async def get_level_by_id(id: int):
         return record
     else:
         raise HTTPException(status_code=404, detail="Запись не найдена")
-
 
 @router.get(
     "/guid/{guid}",
@@ -63,14 +61,12 @@ async def get_level_by_guid(guid: UUID):
     else:
         raise HTTPException(status_code=404, detail="Запись не найдена")
 
-
 @router.get(
     "/title/{title}",
     response_model=RequirementRegulationLevelView,
     description="Поиск уровня регулирования по описанию",
     status_code=status.HTTP_200_OK,
 )
-@cache(expire=60)
 async def get_level_by_title(title: str):
     """
     Поиск осуществляется по регулярному выражению, записанному в таблице в атрибуте regex
@@ -84,7 +80,6 @@ async def get_level_by_title(title: str):
         return record
     else:
         raise HTTPException(status.HTTP_404_NOT_FOUND, detail="Запись не найдена")
-
 
 @router.put(
     "/id/{id}", status_code=status.HTTP_200_OK, description="Изменение записи по ID"
@@ -103,7 +98,6 @@ async def update_level_by_id(id: int, data: RequirementRegulationLevelData):
             status_code=status.HTTP_400_BAD_REQUEST,
             detail="Ошибка обновления записи",
         )
-
 
 @router.put(
     "/guid/{guid}",
@@ -124,7 +118,6 @@ async def update_level_by_guid(guid: UUID, data: RequirementRegulationLevelData)
             status_code=status.HTTP_400_BAD_REQUEST,
             detail="Ошибка обновления записи",
         )
-
 
 @router.post(
     "", status_code=status.HTTP_201_CREATED, description="Создание уровня регулирования"
@@ -151,7 +144,6 @@ async def create_level(data: RequirementRegulationLevelData):
             status_code=status.HTTP_400_BAD_REQUEST, detail="Запись уже существует"
         )
 
-
 @router.delete(
     "/guid/{guid}",
     status_code=status.HTTP_202_ACCEPTED,
@@ -173,7 +165,6 @@ async def delete_level_by_guid(guid: UUID):
         )
     else:
         return status.HTTP_200_OK
-
 
 @router.delete(
     "/id/{id}",

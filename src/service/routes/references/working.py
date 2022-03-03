@@ -33,7 +33,6 @@ async def get_working_statuses():
     )
     return records
 
-
 @router.get(
     "/id/{id}",
     response_model=RequirementWorkStatusView,
@@ -47,7 +46,6 @@ async def get_working_status_by_id(id: int):
         return record
     else:
         raise HTTPException(status_code=404, detail="Запись не найдена")
-
 
 @router.get(
     "/guid/{guid}",
@@ -63,14 +61,12 @@ async def get_working_status_by_guid(guid: UUID):
     else:
         raise HTTPException(status_code=404, detail="Запись не найдена")
 
-
 @router.get(
     "/title/{title}",
     response_model=RequirementWorkStatusView,
     description="Поиск статуса работы с ОТ по описанию",
     status_code=status.HTTP_200_OK,
 )
-@cache(expire=60)
 async def get_working_status_by_title(title: str):
     """
     Поиск осуществляется по регулярному выражению, записанному в таблице в атрибуте regex
@@ -84,7 +80,6 @@ async def get_working_status_by_title(title: str):
         return record
     else:
         raise HTTPException(status_code=404, detail="Запись не найдена")
-
 
 @router.put(
     "/id/{id}",
@@ -106,7 +101,6 @@ async def update_working_status_by_id(id: int, data: RequirementWorkStatusData):
             detail="Ошибка обновления записи",
         )
 
-
 @router.put(
     "/guid/{guid}",
     status_code=status.HTTP_200_OK,
@@ -126,7 +120,6 @@ async def update_working_status_by_guid(guid: UUID, data: RequirementWorkStatusD
             status_code=status.HTTP_400_BAD_REQUEST,
             detail="Ошибка обновления записи",
         )
-
 
 @router.post(
     "",
@@ -155,7 +148,6 @@ async def create_working_status(data: RequirementWorkStatusData):
             status_code=status.HTTP_400_BAD_REQUEST, detail="Запись уже существует"
         )
 
-
 @router.delete(
     "/guid/{guid}",
     status_code=status.HTTP_202_ACCEPTED,
@@ -177,7 +169,6 @@ async def delete_working_status_by_guid(guid: UUID):
         )
     else:
         return status.HTTP_200_OK
-
 
 @router.delete(
     "/id/{id}",
